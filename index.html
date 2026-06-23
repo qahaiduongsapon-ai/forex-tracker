@@ -551,7 +551,7 @@ async function syncFromSheet() {
 
       if (sheetsCount > localCount) {
         // Sheets nhiều hơn → có thể thiết bị khác đã thêm dữ liệu
-        rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random() }));
+        rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) }));
         localStorage.setItem(LS_CL, JSON.stringify(rows));
         clUpdated = true;
       } else if (sheetsCount === localCount) {
@@ -574,7 +574,7 @@ async function syncFromSheet() {
       const sheetsJCount = jnData.length;
 
       if (sheetsJCount > localJCount) {
-        jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() }));
+        jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) }));
         localStorage.setItem(LS_JN, JSON.stringify(jRows));
         jnUpdated = true;
       } else if (sheetsJCount === localJCount) {
@@ -657,11 +657,11 @@ async function forceSyncFromSheet() {
   try {
     const [clData, jnData] = await Promise.all([apiGet('checklist'), apiGet('journal')]);
     if (clData && clData.length > 0) {
-      rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random() }));
+      rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) }));
       localStorage.setItem(LS_CL, JSON.stringify(rows));
     }
     if (jnData && jnData.length > 0) {
-      jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() }));
+      jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) }));
       localStorage.setItem(LS_JN, JSON.stringify(jRows));
     }
     renderAll();
@@ -702,6 +702,32 @@ const OPT = {
 // ═══════════════════════════════════════════════════════════════
 // INIT – load from localStorage
 // ═══════════════════════════════════════════════════════════════
+// Chuẩn hóa ngày về format YYYY-MM-DD cho input type=date
+function normalizeDate(val) {
+  if (!val) return '';
+  var s = String(val).trim();
+  // Đã đúng format YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  // Format MM/DD/YYYY hoặc M/D/YYYY
+  var m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return m[3] + '-' + m[1].padStart(2,'0') + '-' + m[2].padStart(2,'0');
+  // Format DD/MM/YYYY
+  var m2 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  // Thử parse bằng Date object
+  var d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    var y = d.getFullYear();
+    var mo = String(d.getMonth()+1).padStart(2,'0');
+    var dd = String(d.getDate()).padStart(2,'0');
+    // Tránh lỗi timezone: dùng UTC
+    d = new Date(s + (s.includes('T') ? '' : 'T00:00:00'));
+    y = d.getUTCFullYear(); mo = String(d.getUTCMonth()+1).padStart(2,'0'); dd = String(d.getUTCDate()).padStart(2,'0');
+    return y + '-' + mo + '-' + dd;
+  }
+  return s;
+}
+
+
 function init() {
   // Load checklist từ localStorage (KHÔNG auto-sync từ Sheets khi mở)
   try { rows = JSON.parse(localStorage.getItem(LS_CL) || '[]'); } catch(e) { rows = []; }
