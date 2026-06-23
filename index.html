@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Forex Checklist – Hệ thống 2 EMA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f6f9;--surface:#fff;--surface2:#f1f3f7;--surface3:#e8ecf2;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --text:#1a1a2e;--text2:#5a5a7a;--text3:#9999b0;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-text:#0C447C;--blue-light:#378ADD;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-mid:#639922;
+  --amber:#854F0B;--amber-bg:#FAEEDA;--amber-mid:#BA7517;
+  --red:#A32D2D;--red-bg:#FCEBEB;--red-mid:#E24B4A;
+  --r-sm:6px;--r-md:8px;--r-lg:12px;--r-xl:16px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 8px rgba(0,0,0,0.04);
+  --nav-h:54px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0f0f1a;--surface:#1a1a2e;--surface2:#22223a;--surface3:#2a2a42;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+    --text:#e4e4f0;--text2:#9090b8;--text3:#5a5a7a;
+    --blue-bg:#071e38;--blue-text:#7ec3f5;
+    --green-bg:#0e2205;--green:#a3d460;
+    --amber-bg:#2a1500;--amber:#f5c46a;
+    --red-bg:#2a0505;--red:#f08080;
+  }
+}
+html{font-size:14px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── NAV ── */
+.nav{background:var(--surface);border-bottom:0.5px solid var(--border2);display:flex;align-items:center;padding:0 1rem;height:var(--nav-h);gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.nav-logo{width:30px;height:30px;background:linear-gradient(135deg,#1B4F8A,#378ADD);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-logo i{color:#fff;font-size:17px}
+.nav-title{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap}
+.nav-tabs{display:flex;gap:2px;margin-left:auto;flex-shrink:0}
+.nav-tab{font-size:13px;padding:6px 12px;border-radius:var(--r-md);border:none;background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:all .15s;white-space:nowrap}
+.nav-tab:hover{background:var(--surface2);color:var(--text)}
+.nav-tab.active{background:var(--blue-bg);color:var(--blue-text);font-weight:500}
+.nav-actions{display:flex;gap:6px;flex-shrink:0}
+.nav-save,.nav-sync{font-size:12px;padding:5px 11px;border-radius:var(--r-md);border:0.5px solid;background:transparent;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:inherit;transition:opacity .15s;white-space:nowrap}
+.nav-save{border-color:var(--green-mid);background:var(--green-bg);color:var(--green)}
+.nav-sync{border-color:var(--blue-light);background:var(--blue-bg);color:var(--blue-text)}
+.nav-save:hover,.nav-sync:hover{opacity:.75}
+.save-flash{animation:flash .5s ease}
+@keyframes flash{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+
+/* ── SYNC STATUS BAR ── */
+.sync-bar{display:none;align-items:center;gap:8px;padding:7px 1rem;font-size:12px;border-bottom:1px solid var(--border)}
+.sync-bar.visible{display:flex}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sync-dot.syncing{background:#f59e0b;animation:pulse 1s infinite}
+.sync-dot.ok{background:#639922}
+.sync-dot.err{background:#E24B4A}
+.sync-dot.local{background:#9999b0}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-msg{color:var(--text2);flex:1}
+.sync-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:0 4px}
+
+/* ── PAGES ── */
+.page{display:none;padding:1.25rem 1rem}
+.page.active{display:block}
+
+/* ── SETUP MODAL ── */
+.setup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:center;justify-content:center}
+.setup-box{background:var(--surface);border-radius:var(--r-xl);padding:28px 26px;max-width:520px;width:93%;box-shadow:0 12px 48px rgba(0,0,0,.25)}
+.setup-box h2{font-size:17px;font-weight:700;margin-bottom:6px}
+.setup-box p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+.setup-steps{background:var(--surface2);border-radius:var(--r-lg);padding:14px 16px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.9}
+.setup-steps b{color:var(--text)}
+.setup-input{width:100%;border:1px solid var(--border2);border-radius:var(--r-md);padding:10px 13px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);outline:none;margin-bottom:10px}
+.setup-input:focus{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+.setup-btns{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.setup-skip{font-size:12px;color:var(--text3);background:none;border:none;cursor:pointer;padding:6px;font-family:inherit}
+.setup-skip:hover{color:var(--text2)}
+
+/* ── BUTTONS ── */
+.btn{font-size:12px;padding:6px 13px;border-radius:var(--r-md);border:0.5px solid var(--border2);background:var(--surface);color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;transition:background .15s,border-color .15s}
+.btn:hover{background:var(--surface2)}
+.btn-primary{background:var(--blue-bg);border-color:var(--blue-light);color:var(--blue-text)}
+.btn-danger{background:var(--red-bg);border-color:var(--red-mid);color:var(--red)}
+.btn-green{background:var(--green-bg);border-color:var(--green-mid);color:var(--green)}
+
+/* ── CHECKLIST TABLE ── */
+.cl-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.cl-toolbar h2{font-size:16px;font-weight:600;flex:1;min-width:120px}
+.cl-wrap{overflow-x:auto;border-radius:var(--r-lg);border:0.5px solid var(--border2);background:var(--surface);box-shadow:var(--shadow)}
+.cl-table{border-collapse:separate;border-spacing:0;min-width:1400px;width:max-content}
+.cl-table th{background:var(--surface2);font-size:11px;font-weight:600;color:var(--text2);padding:9px 10px;border-bottom:0.5px solid var(--border2);border-right:0.5px solid var(--border);white-space:nowrap;text-align:center}
+.cl-table th.left{text-align:left}
+.cl-table td{padding:0;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);vertical-align:middle}
+.cl-table tr:last-child td{border-bottom:none}
+.cl-table tr:hover td{background:var(--surface2)}
+.cl-table th.sc1,.cl-table td.sc1{position:sticky;left:0;z-index:5;background:var(--surface2)}
+.cl-table th.sc2,.cl-table td.sc2{position:sticky;left:36px;z-index:5;background:var(--surface2)}
+.cl-table th.sc3,.cl-table td.sc3{position:sticky;left:156px;z-index:5;background:var(--surface2);border-right:2px solid var(--border2)!important}
+.cl-table td.sc1,.cl-table td.sc2,.cl-table td.sc3{background:var(--surface)}
+.cl-table tr:hover td.sc1,.cl-table tr:hover td.sc2,.cl-table tr:hover td.sc3{background:var(--surface2)}
+.grp-h4{background:#dbeafe!important;color:#1e40af!important}
+.grp-h1{background:#d1fae5!important;color:#065f46!important}
+.grp-m15{background:#fef3c7!important;color:#92400e!important}
+.grp-entry{background:#ede9fe!important;color:#4c1d95!important}
+.grp-result{background:#fce7f3!important;color:#9d174d!important}
+.cl-table input[type=date],.cl-input{width:100%;border:none;background:transparent;color:var(--text);font-size:12px;font-family:inherit;padding:8px 8px;outline:none;display:block}
+.cl-input:focus,.cl-table input[type=date]:focus{background:var(--blue-bg)}
+.cl-select{width:100%;border:none;background:transparent;color:var(--text);font-size:11px;font-family:inherit;padding:8px 4px 8px 6px;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;display:block}
+.cl-select:focus{background:var(--blue-bg)}
+.cl-select option{background:var(--surface);color:var(--text)}
+.auto-cell{padding:8px 10px;font-size:11px;font-weight:500;text-align:center;white-space:nowrap}
+.auto-vao{color:var(--green);background:var(--green-bg)}
+.auto-cho{color:var(--amber);background:var(--amber-bg)}
+.auto-ngoai{color:var(--red);background:var(--red-bg)}
+.auto-tang{color:#1e40af;background:#dbeafe}
+.auto-giam{color:#9d174d;background:#fce7f3}
+.auto-side{color:var(--text2);background:var(--surface3)}
+.auto-dong{color:var(--green);background:var(--green-bg)}
+.auto-nguoc{color:var(--red);background:var(--red-bg)}
+.auto-kep{color:var(--amber);background:var(--amber-bg)}
+.auto-advice{padding:8px 10px;font-size:11px;color:var(--text2);min-width:260px;max-width:340px;white-space:normal;word-break:break-word;line-height:1.55;cursor:default}
+.auto-advice.a-vao{color:var(--green)}
+.auto-advice.a-cho{color:var(--amber)}
+.auto-advice.a-ngoai{color:var(--red)}
+.row-num{font-size:11px;color:var(--text3);text-align:center;padding:9px 6px;min-width:32px}
+.del-btn{background:transparent;border:none;color:var(--text3);cursor:pointer;padding:4px 8px;font-size:14px;display:flex;align-items:center}
+.del-btn:hover{color:var(--red)}
+
+/* ── DASHBOARD ── */
+.db-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.db-toolbar h2{font-size:16px;font-weight:600;flex:1}
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:10px 14px;margin-bottom:1rem}
+.filter-label{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px;white-space:nowrap}
+.date-list{display:flex;gap:6px;flex-wrap:wrap}
+.dbt{font-size:12px;padding:4px 12px;border-radius:99px;border:0.5px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;font-family:inherit}
+.dbt:hover{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-light)}
+.dbt.active{background:#1B4F8A;color:#fff;border-color:#1B4F8A;font-weight:500}
+.metric-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1rem}
+.mc{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow)}
+.mc .mi{font-size:18px;margin-bottom:6px}
+.mc .ml{font-size:11px;color:var(--text3);margin-bottom:3px}
+.mc .mv{font-size:26px;font-weight:700}
+.mc .ms{font-size:11px;color:var(--text3);margin-top:2px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
+.cc{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow)}
+.cc-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.cc-sub{font-size:11px;color:var(--text3);margin-bottom:12px}
+.legend-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;font-size:11px;color:var(--text2)}
+.ld{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+.table-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow);overflow-x:auto}
+.tc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+table.rt{width:100%;border-collapse:collapse;font-size:12px}
+table.rt th{text-align:left;color:var(--text2);font-weight:500;font-size:11px;padding:7px 10px;border-bottom:0.5px solid var(--border2);white-space:nowrap}
+table.rt td{padding:9px 10px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+table.rt tr:last-child td{border-bottom:none}
+table.rt tr:hover td{background:var(--surface2)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.bv{background:var(--green-bg);color:var(--green)}
+.bc{background:var(--amber-bg);color:var(--amber)}
+.bn{background:var(--red-bg);color:var(--red)}
+.adv-td{font-size:11px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default}
+.empty-db{text-align:center;padding:4rem 1rem;color:var(--text3)}
+.empty-db i{font-size:44px;display:block;margin-bottom:12px}
+.empty-db p{font-size:14px}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--r-xl);padding:20px 22px;max-width:480px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.modal h3{font-size:15px;font-weight:600;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* ── TOOLTIP ── */
+.tooltip-popup{position:fixed;background:var(--text);color:var(--bg);font-size:11px;padding:6px 10px;border-radius:var(--r-md);max-width:320px;pointer-events:none;z-index:9999;line-height:1.5;display:none;word-break:break-word;white-space:normal}
+
+/* ── JOURNAL ── */
+.jn-wrap{overflow-x:auto;border-radius:var(--r-lg);border:0.5px solid var(--border2);background:var(--surface);box-shadow:var(--shadow)}
+.jn-table{border-collapse:separate;border-spacing:0;width:100%;min-width:920px}
+.jn-table th{background:var(--surface2);font-size:11px;font-weight:600;color:var(--text2);padding:9px 12px;border-bottom:0.5px solid var(--border2);border-right:0.5px solid var(--border);white-space:nowrap;text-align:center}
+.jn-table td{padding:0;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);vertical-align:middle}
+.jn-table tr:last-child td{border-bottom:none}
+.jn-table tr:hover td{background:var(--surface2)}
+.jn-table .ji{width:100%;border:none;background:transparent;color:var(--text);font-size:12px;font-family:inherit;padding:8px 10px;outline:none;text-align:center}
+.jn-table .ji:focus{background:var(--blue-bg)}
+.jn-table .js{width:100%;border:none;background:transparent;color:var(--text);font-size:12px;font-family:inherit;padding:7px 6px;outline:none;cursor:pointer;appearance:none;text-align:center}
+.jn-table .js:focus{background:var(--blue-bg)}
+.win-cell{background:var(--green-bg)!important;color:var(--green)!important;font-weight:600;text-align:center;padding:8px 10px;font-size:12px}
+.loss-cell{background:var(--red-bg)!important;color:var(--red)!important;font-weight:600;text-align:center;padding:8px 10px;font-size:12px}
+.be-cell{background:var(--amber-bg)!important;color:var(--amber)!important;font-weight:600;text-align:center;padding:8px 10px;font-size:12px}
+.rr-auto{padding:8px 10px;font-size:12px;font-weight:600;text-align:center;color:var(--text2)}
+
+/* ── PERFORMANCE ── */
+.perf-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.perf-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;box-shadow:var(--shadow)}
+.perf-card .pc-label{font-size:11px;color:var(--text3);margin-bottom:4px}
+.perf-card .pc-val{font-size:22px;font-weight:700}
+.perf-card .pc-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.perf-section{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow);margin-bottom:1rem}
+.perf-section h3{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text)}
+.perf-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)}
+.perf-row:last-child{border-bottom:none}
+.perf-row .pr-label{font-size:12px;color:var(--text2)}
+.perf-row .pr-val{font-size:13px;font-weight:600;color:var(--text)}
+.pr-pos{color:var(--green)!important}
+.pr-neg{color:var(--red)!important}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .metric-row{grid-template-columns:repeat(2,1fr)}
+  .charts-row{grid-template-columns:1fr}
+  .perf-grid{grid-template-columns:repeat(2,1fr)}
+  .nav-tab span{display:none}
+  .nav-title{display:none}
+  .nav-save span,.nav-sync span{display:none}
+  .nav-save,.nav-sync{padding:5px 8px}
+}
+@media(max-width:480px){
+  .page{padding:1rem .75rem}
+  .nav{padding:0 .75rem;gap:6px}
+}
+</style>
+
+<!-- ============================================================
+     APPS SCRIPT URL – Thay URL dưới đây sau khi deploy
+     ============================================================ -->
+<script>
+window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxValxanthJVoOZuhIsGOvwW-QRcgo__TiDY6DwVHfQ6q-JrLGp9cM9FeGlW4AB-Ssn/exec";
+// Nếu chưa có URL, ứng dụng vẫn chạy và lưu offline (localStorage)
+// Sau khi có URL → bấm ⚙️ Cài đặt để cập nhật
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><i class="ti ti-chart-candle"></i></div>
+  <div class="nav-title">Forex 2 EMA</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('checklist',this)">
+      <i class="ti ti-checklist"></i><span>Checklist</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('dashboard',this)">
+      <i class="ti ti-chart-bar"></i><span>Báo cáo</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('journal',this)">
+      <i class="ti ti-notebook"></i><span>Nhật ký</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('performance',this)">
+      <i class="ti ti-trophy"></i><span>Hiệu suất</span>
+    </button>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-sync" id="fetch-btn" onclick="fetchAllMarketData()" title="Tự động lấy dữ liệu H4/H1/M15 từ Twelve Data">
+      <i class="ti ti-antenna"></i><span>Lấy dữ liệu</span>
+    </button>
+    <button class="nav-sync" onclick="syncFromSheet()" title="Đồng bộ thông minh: chỉ cập nhật nếu Sheets có nhiều hơn local">
+      <i class="ti ti-refresh"></i><span>Đồng bộ</span>
+    </button>
+    <button class="nav-sync" onclick="forceSyncFromSheet()" title="Kéo hẳn từ Sheets về (ghi đè local)" style="border-color:#BA7517;background:var(--amber-bg);color:var(--amber)">
+      <i class="ti ti-cloud-download"></i><span>Kéo Sheets</span>
+    </button>
+    <button class="nav-save" id="save-btn" onclick="saveAll()">
+      <i class="ti ti-device-floppy"></i><span>Lưu</span>
+    </button>
+    <button class="btn" onclick="openSetup()" title="Cài đặt Google Sheets" style="padding:5px 9px">
+      <i class="ti ti-settings" style="font-size:15px"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- SYNC STATUS BAR -->
+<div class="sync-bar" id="sync-bar">
+  <div class="sync-dot" id="sync-dot"></div>
+  <div class="sync-msg" id="sync-msg"></div>
+  <button class="sync-close" onclick="hideSyncBar()">×</button>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip-popup" id="tooltip"></div>
+
+<!-- SETUP MODAL -->
+<div class="setup-overlay" id="setup-overlay" style="display:none">
+  <div class="setup-box">
+    <h2>🔗 Kết nối Google Sheets</h2>
+    <p>Lưu dữ liệu lên Google Sheets để dùng chung trên mọi thiết bị.</p>
+    <div class="setup-steps">
+      <b>Bước 1:</b> Mở Google Sheets → <b>Extensions → Apps Script</b><br>
+      <b>Bước 2:</b> Xoá code mặc định → Dán code từ file <code>GoogleAppsScript_ForexTracker.js</code><br>
+      <b>Bước 3:</b> <b>Deploy → New deployment → Web app</b><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Execute as: <b>Me</b> | Who has access: <b>Anyone</b><br>
+      <b>Bước 4:</b> Copy <b>Web app URL</b> và dán vào ô bên dưới
+    </div>
+    <input class="setup-input" id="url-input" type="url"
+      placeholder="https://script.google.com/macros/s/..."
+      value="">
+    <div class="setup-btns">
+      <button class="setup-skip" onclick="closeSetup()">Bỏ qua (dùng offline)</button>
+      <button class="btn" onclick="closeSetup()">Huỷ</button>
+      <button class="btn btn-primary" onclick="saveUrl()"><i class="ti ti-check"></i> Lưu & Đồng bộ</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CHECKLIST -->
+<div class="page active" id="page-checklist">
+  <div class="cl-toolbar">
+    <h2>Checklist hằng ngày</h2>
+    <button class="btn btn-primary" onclick="addRow()"><i class="ti ti-plus"></i> Thêm cặp</button>
+    <button class="btn" onclick="addTodayRows()"><i class="ti ti-calendar-plus"></i> Hôm nay</button>
+    <button class="btn btn-danger" onclick="confirmClear()"><i class="ti ti-trash"></i> Xoá tất cả</button>
+  </div>
+  <div class="cl-wrap">
+    <table class="cl-table" id="cl-table">
+      <thead>
+        <tr>
+          <th class="left sc1" rowspan="2" style="min-width:36px">#</th>
+          <th class="left sc2" rowspan="2" style="min-width:120px">Ngày</th>
+          <th class="left sc3" rowspan="2" style="min-width:96px">Cặp tiền</th>
+          <th colspan="2" class="grp-h4">Khung H4</th>
+          <th colspan="2" class="grp-h1">Khung H1</th>
+          <th colspan="2" class="grp-m15">Khung M15</th>
+          <th colspan="4" class="grp-entry">Điểm vào lệnh</th>
+          <th colspan="2" class="grp-result">Kết quả tự động</th>
+          <th rowspan="2" style="min-width:36px"></th>
+        </tr>
+        <tr>
+          <th class="grp-h4" style="min-width:140px">Vị trí giá / EMA</th>
+          <th class="grp-h4" style="min-width:120px">⚙️ Xu thế</th>
+          <th class="grp-h1" style="min-width:140px">Vị trí giá / EMA</th>
+          <th class="grp-h1" style="min-width:130px">⚙️ Đồng thuận H4</th>
+          <th class="grp-m15" style="min-width:140px">Vị trí giá / EMA</th>
+          <th class="grp-m15" style="min-width:130px">⚙️ Đồng thuận H4</th>
+          <th class="grp-entry" style="min-width:130px">Vùng EMA H1/M15</th>
+          <th class="grp-entry" style="min-width:130px">Hành vi giá</th>
+          <th class="grp-entry" style="min-width:150px">Phá trend + Tạo Dow</th>
+          <th class="grp-entry" style="min-width:116px">Tin tức lớn?</th>
+          <th class="grp-result" style="min-width:120px">⚙️ Kết luận</th>
+          <th class="grp-result" style="min-width:280px">⚙️ Lời khuyên</th>
+        </tr>
+      </thead>
+      <tbody id="cl-body"></tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--text3);margin-top:10px;padding-left:4px">
+    <i class="ti ti-info-circle" style="vertical-align:middle;margin-right:3px"></i>
+    Cột ⚙️ tự động tính. Hover vào Lời khuyên để đọc đầy đủ. Bấm <b>Lưu</b> để đồng bộ lên Google Sheets.
+  </p>
+</div>
+
+<!-- PAGE: DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <div class="db-toolbar">
+    <h2>Báo cáo tín hiệu</h2>
+  </div>
+  <div class="filter-bar">
+    <span class="filter-label"><i class="ti ti-calendar"></i> Chọn ngày:</span>
+    <div class="date-list" id="date-btns"></div>
+  </div>
+  <div id="db-content">
+    <div class="empty-db">
+      <i class="ti ti-chart-candle"></i>
+      <p>Chưa có dữ liệu. Vào tab <strong>Checklist</strong> để nhập.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: NHẬT KÝ -->
+<div class="page" id="page-journal">
+  <div class="cl-toolbar">
+    <h2>Nhật ký giao dịch</h2>
+    <button class="btn btn-primary" onclick="addJournalRow()"><i class="ti ti-plus"></i> Thêm lệnh</button>
+    <button class="btn btn-danger" onclick="confirmClearJournal()"><i class="ti ti-trash"></i> Xoá tất cả</button>
+  </div>
+  <div class="jn-wrap">
+    <table class="jn-table" id="jn-table">
+      <thead>
+        <tr>
+          <th style="min-width:34px">#</th>
+          <th style="min-width:112px">Ngày</th>
+          <th style="min-width:96px">Cặp tiền</th>
+          <th style="min-width:84px">Hướng</th>
+          <th style="min-width:110px">Entry</th>
+          <th style="min-width:110px">SL</th>
+          <th style="min-width:110px">TP</th>
+          <th style="min-width:100px">Volume (lot)</th>
+          <th style="min-width:96px">⚙️ R:R</th>
+          <th style="min-width:110px">Lợi nhuận ($)</th>
+          <th style="min-width:110px">Trạng thái</th>
+          <th style="min-width:160px">Ghi chú</th>
+          <th style="min-width:34px"></th>
+        </tr>
+      </thead>
+      <tbody id="jn-body"></tbody>
+    </table>
+  </div>
+  <p style="font-size:11px;color:var(--text3);margin-top:10px;padding-left:4px">
+    <i class="ti ti-info-circle" style="vertical-align:middle;margin-right:3px"></i>
+    R:R tự động tính. Trạng thái Win/Loss/BE tự động từ P&L. Bấm <b>Lưu</b> để đồng bộ lên Google Sheets.
+  </p>
+</div>
+
+<!-- PAGE: HIỆU SUẤT -->
+<div class="page" id="page-performance">
+  <div class="cl-toolbar">
+    <h2>Báo cáo hiệu suất giao dịch</h2>
+    <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+      <label style="font-size:12px;color:var(--text2)">Tháng:</label>
+      <select id="perf-month-filter" onchange="renderPerformance()" style="font-size:12px;padding:5px 10px;border-radius:var(--r-md);border:0.5px solid var(--border2);background:var(--surface);color:var(--text);cursor:pointer;font-family:inherit">
+        <option value="all">Tất cả</option>
+      </select>
+    </div>
+  </div>
+  <div id="perf-content">
+    <div class="empty-db"><i class="ti ti-trophy"></i><p>Chưa có dữ liệu. Vào tab <strong>Nhật ký</strong> để nhập lệnh.</p></div>
+  </div>
+</div>
+
+<!-- MODAL XÁC NHẬN XOÁ -->
+<div class="modal-bg" id="modal-clear">
+  <div class="modal">
+    <h3>Xoá toàn bộ checklist?</h3>
+    <p>Thao tác này sẽ xoá tất cả dữ liệu checklist và <b>ghi đè lên Google Sheets</b>.</p>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('modal-clear')">Huỷ</button>
+      <button class="btn btn-danger" onclick="clearAll()"><i class="ti ti-trash"></i> Xoá</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-clear-journal">
+  <div class="modal">
+    <h3>Xoá toàn bộ nhật ký?</h3>
+    <p>Sẽ xoá tất cả lệnh và <b>ghi đè lên Google Sheets</b>.</p>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('modal-clear-journal')">Huỷ</button>
+      <button class="btn btn-danger" onclick="clearJournal()"><i class="ti ti-trash"></i> Xoá</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIG & STATE
+// ═══════════════════════════════════════════════════════════════
+const LS_CL   = 'forex2ema_rows';
+const LS_JN   = 'forex2ema_journal';
+const LS_URL  = 'forex2ema_url';
+
+let rows  = [];
+let jRows = [];
+let barInst = null, donutInst = null;
+let selectedDate = '';
+let _syncTimer = null;
+
+// ═══════════════════════════════════════════════════════════════
+// URL MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function getUrl() {
+  const stored = localStorage.getItem(LS_URL);
+  if (stored) return stored;
+  const inlineUrl = window.APPS_SCRIPT_URL || '';
+  if (inlineUrl && inlineUrl !== 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') return inlineUrl;
+  return '';
+}
+
+function openSetup() {
+  document.getElementById('url-input').value = getUrl();
+  document.getElementById('setup-overlay').style.display = 'flex';
+}
+function closeSetup() {
+  document.getElementById('setup-overlay').style.display = 'none';
+}
+function saveUrl() {
+  const v = document.getElementById('url-input').value.trim();
+  if (v) {
+    localStorage.setItem(LS_URL, v);
+    closeSetup();
+    syncFromSheet();
+  } else {
+    closeSetup();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYNC STATUS BAR
+// ═══════════════════════════════════════════════════════════════
+function showSyncBar(state, msg) {
+  const bar = document.getElementById('sync-bar');
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-msg');
+  bar.classList.add('visible');
+  dot.className = 'sync-dot ' + state;
+  txt.textContent = msg;
+  if (_syncTimer) clearTimeout(_syncTimer);
+  if (state === 'ok') _syncTimer = setTimeout(hideSyncBar, 3500);
+}
+function hideSyncBar() {
+  document.getElementById('sync-bar').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// GOOGLE SHEETS API
+// ═══════════════════════════════════════════════════════════════
+async function apiGet(sheet) {
+  const url = getUrl();
+  if (!url) return null;
+  const resp = await fetch(`${url}?sheet=${sheet}`, { redirect: 'follow' });
+  const data = await resp.json();
+  if (!data.ok) throw new Error(data.error || 'API error');
+  return data.rows;
+}
+
+async function apiSave(sheet, data) {
+  const url = getUrl();
+  if (!url) return false;
+  const resp = await fetch(url, {
+    method: 'POST',
+    redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain' }, // avoid CORS preflight
+    body: JSON.stringify({ action: 'save', sheet, rows: data })
+  });
+  const result = await resp.json();
+  if (!result.ok) throw new Error(result.error || 'Save error');
+  return true;
+}
+
+// Đồng bộ từ Sheets → local (thông minh: không ghi đè nếu local mới hơn)
+async function syncFromSheet() {
+  const url = getUrl();
+  if (!url) {
+    showSyncBar('local', '⚡ Chế độ offline – chưa kết nối Google Sheets. Bấm ⚙️ để cài đặt.');
+    return;
+  }
+  showSyncBar('syncing', '⏳ Đang tải dữ liệu từ Google Sheets...');
+  try {
+    const [clData, jnData] = await Promise.all([apiGet('checklist'), apiGet('journal')]);
+
+    // ── So sánh thông minh: chọn nguồn có nhiều dữ liệu hơn ──
+    // Nếu Sheets có NHIỀU dòng hơn local → dùng Sheets (thiết bị khác đã thêm)
+    // Nếu local có NHIỀU dòng hơn hoặc BẰNG → giữ local (đang làm dở)
+    // Nếu Sheets RỖNG → tuyệt đối không ghi đè local
+    let clUpdated = false, jnUpdated = false;
+
+    if (clData && clData.length > 0) {
+      const localCount = rows.length;
+      const sheetsCount = clData.length;
+
+      if (sheetsCount > localCount) {
+        // Sheets nhiều hơn → có thể thiết bị khác đã thêm dữ liệu
+        rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random() }));
+        localStorage.setItem(LS_CL, JSON.stringify(rows));
+        clUpdated = true;
+      } else if (sheetsCount === localCount) {
+        // Bằng nhau → Sheets có thể mới hơn (chỉnh sửa), merge theo id
+        const sheetsMap = {};
+        clData.forEach(r => { sheetsMap[r.id] = r; });
+        rows = rows.map(r => {
+          const s = sheetsMap[r.id];
+          // Nếu Sheets có dữ liệu cho row này và khác local → ưu tiên Sheets
+          return s ? { ...s, id: parseFloat(s.id) || r.id } : r;
+        });
+        localStorage.setItem(LS_CL, JSON.stringify(rows));
+        clUpdated = true;
+      }
+      // Nếu local nhiều hơn Sheets → GIỮ LOCAL, không ghi đè
+    }
+
+    if (jnData && jnData.length > 0) {
+      const localJCount = jRows.length;
+      const sheetsJCount = jnData.length;
+
+      if (sheetsJCount > localJCount) {
+        jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() }));
+        localStorage.setItem(LS_JN, JSON.stringify(jRows));
+        jnUpdated = true;
+      } else if (sheetsJCount === localJCount) {
+        const sheetsJMap = {};
+        jnData.forEach(r => { sheetsJMap[r.id] = r; });
+        jRows = jRows.map(r => {
+          const s = sheetsJMap[r.id];
+          return s ? { ...s, id: parseFloat(s.id) || r.id } : r;
+        });
+        localStorage.setItem(LS_JN, JSON.stringify(jRows));
+        jnUpdated = true;
+      }
+    }
+
+    renderAll();
+    renderJournal();
+    renderPerformance();
+
+    // Thông báo kết quả chi tiết
+    const clMsg = clData && clData.length > 0
+      ? (clData.length > rows.length
+          ? `✅ Checklist: cập nhật từ Sheets (${clData.length} dòng)`
+          : `✅ Checklist: giữ local (${rows.length} dòng, nhiều hơn hoặc bằng Sheets)`)
+      : `⚠️ Checklist: Sheets rỗng → giữ local (${rows.length} dòng)`;
+
+    showSyncBar('ok', `${clMsg} | Nhật ký: ${jRows.length} lệnh`);
+
+  } catch(e) {
+    showSyncBar('err', '❌ Lỗi đồng bộ: ' + e.message + ' — Đang dùng dữ liệu cục bộ.');
+  }
+}
+
+// Lưu tất cả lên Sheets
+async function saveAll() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation:spin 1s linear infinite"></i><span>Đang lưu...</span>';
+
+  // Luôn lưu local TRƯỚC (đảm bảo không mất dữ liệu dù API lỗi)
+  localStorage.setItem(LS_CL, JSON.stringify(rows));
+  localStorage.setItem(LS_JN, JSON.stringify(jRows));
+
+  const url = getUrl();
+  if (!url) {
+    showSyncBar('local', '💾 Đã lưu cục bộ (chưa kết nối Sheets). Bấm ⚙️ để cài đặt.');
+    resetSaveBtn();
+    return;
+  }
+
+  showSyncBar('syncing', '⏳ Đang lưu lên Google Sheets...');
+  try {
+    await Promise.all([
+      apiSave('checklist', rows),
+      apiSave('journal', jRows)
+    ]);
+    showSyncBar('ok', `✅ Đã lưu: ${rows.length} checklist + ${jRows.length} nhật ký lên Sheets`);
+    btn.classList.add('save-flash');
+    btn.innerHTML = '<i class="ti ti-check"></i><span>Đã lưu</span>';
+    setTimeout(resetSaveBtn, 2000);
+  } catch(e) {
+    // Lưu Sheets lỗi nhưng local đã an toàn
+    showSyncBar('err', '⚠️ Lỗi lưu Sheets: ' + e.message + ' — Đã lưu cục bộ an toàn. Thử lại sau.');
+    resetSaveBtn();
+  }
+  btn.disabled = false;
+}
+
+// Đồng bộ ép buộc: kéo hẳn từ Sheets về, ghi đè local
+// Dùng khi muốn lấy dữ liệu từ thiết bị khác về
+async function forceSyncFromSheet() {
+  const url = getUrl();
+  if (!url) {
+    showSyncBar('local', '⚡ Chưa kết nối Google Sheets. Bấm ⚙️ để cài đặt.');
+    return;
+  }
+  const ok = confirm('⚠️ Đồng bộ ép buộc sẽ GHI ĐÈ dữ liệu cục bộ bằng dữ liệu từ Google Sheets.\n\nBạn có chắc chắn muốn tiếp tục không?');
+  if (!ok) return;
+
+  showSyncBar('syncing', '⏳ Đang kéo dữ liệu từ Google Sheets...');
+  try {
+    const [clData, jnData] = await Promise.all([apiGet('checklist'), apiGet('journal')]);
+    if (clData && clData.length > 0) {
+      rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random() }));
+      localStorage.setItem(LS_CL, JSON.stringify(rows));
+    }
+    if (jnData && jnData.length > 0) {
+      jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() }));
+      localStorage.setItem(LS_JN, JSON.stringify(jRows));
+    }
+    renderAll();
+    renderJournal();
+    renderPerformance();
+    showSyncBar('ok', `✅ Đã kéo từ Sheets: ${rows.length} checklist, ${jRows.length} nhật ký`);
+  } catch(e) {
+    showSyncBar('err', '❌ Lỗi: ' + e.message);
+  }
+}
+
+function resetSaveBtn() {
+  const btn = document.getElementById('save-btn');
+  btn.classList.remove('save-flash');
+  btn.innerHTML = '<i class="ti ti-device-floppy"></i><span>Lưu</span>';
+  btn.disabled = false;
+}
+
+// Auto-save local on change
+function autoSave() {
+  localStorage.setItem(LS_CL, JSON.stringify(rows));
+}
+function jAutoSave() {
+  localStorage.setItem(LS_JN, JSON.stringify(jRows));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECKLIST OPTIONS
+// ═══════════════════════════════════════════════════════════════
+const OPT = {
+  pos:  ['📈 Trên cả 2 EMA','📉 Dưới cả 2 EMA','↔️ Kẹp giữa'],
+  zone: ['✅ Đúng vùng EMA','⏳ Đang tiếp cận','❌ Chưa hồi về'],
+  pa:   ['✅ Có tín hiệu rõ','⚠️ Tín hiệu yếu','❌ Không có'],
+  dow:  ['✅ Đã phá trend + tạo Dow','⚠️ Đang hình thành','❌ Chưa phá trend'],
+  news: ['❌ Không có','⚠️ Có – thận trọng'],
+};
+
+// ═══════════════════════════════════════════════════════════════
+// INIT – load from localStorage
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  // Load checklist từ localStorage (KHÔNG auto-sync từ Sheets khi mở)
+  try { rows = JSON.parse(localStorage.getItem(LS_CL) || '[]'); } catch(e) { rows = []; }
+  // Load journal
+  try { jRows = JSON.parse(localStorage.getItem(LS_JN) || '[]'); } catch(e) { jRows = []; }
+
+  if (rows.length === 0) addTodayRows(true);
+  else renderAll();
+  renderJournal();
+  renderPerformance();
+
+  // Kiểm tra kết nối nhưng KHÔNG tự động ghi đè dữ liệu
+  const url = getUrl();
+  if (!url) {
+    showSyncBar('local', '⚡ Chế độ offline. Bấm ⚙️ để kết nối Google Sheets và dùng trên mọi thiết bị.');
+  } else {
+    // Chỉ báo đã kết nối, KHÔNG kéo dữ liệu tự động
+    showSyncBar('ok', `✅ Đã kết nối Google Sheets. Bấm 🔄 Đồng bộ để tải dữ liệu mới nhất từ Sheets.`);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHECKLIST ROWS
+// ═══════════════════════════════════════════════════════════════
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function newRow(dateVal) {
+  return { id: Date.now() + Math.random(), date: dateVal || todayStr(),
+           pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'' };
+}
+
+function addRow() { rows.push(newRow()); renderAll(); autoSave(); }
+
+function addTodayRows(silent) {
+  const t = todayStr();
+  ['EURUSD','GBPUSD','USDJPY','XAUUSD'].forEach(p => {
+    const r = newRow(t); r.pair = p; rows.push(r);
+  });
+  renderAll();
+  if (!silent) autoSave();
+}
+
+function deleteRow(id) { rows = rows.filter(r => r.id !== id); renderAll(); autoSave(); }
+
+function updateRow(id, field, val) {
+  const r = rows.find(r => r.id === id);
+  if (r) { r[field] = val; renderAuto(id); autoSave(); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTO COMPUTE
+// ═══════════════════════════════════════════════════════════════
+function computeRow(r) {
+  const h4 = r.h4pos, h1 = r.h1pos, m15 = r.m15pos;
+  const TREN='📈 Trên cả 2 EMA', DUOI='📉 Dưới cả 2 EMA', KEP='↔️ Kẹp giữa';
+  const ZOK='✅ Đúng vùng EMA', ZAP='⏳ Đang tiếp cận', ZNO='❌ Chưa hồi về';
+  const PAOK='✅ Có tín hiệu rõ', PAWEAK='⚠️ Tín hiệu yếu', PANO='❌ Không có';
+  const DOWOK='✅ Đã phá trend + tạo Dow', DOWFORM='⚠️ Đang hình thành', DOWNO='❌ Chưa phá trend';
+  const NEWS_WARN='⚠️ Có – thận trọng';
+
+  let h4trend = '–';
+  if (h4===TREN) h4trend='⬆️ Xu thế TĂNG';
+  else if (h4===DUOI) h4trend='⬇️ Xu thế GIẢM';
+  else if (h4===KEP) h4trend='➡️ Sideway';
+
+  let h1sync = '–';
+  if (h4 && h1) {
+    if (h4===KEP) h1sync='⚠️ H4 kẹp';
+    else if (h1===KEP) h1sync='⚠️ H1 kẹp';
+    else if (h4===TREN&&h1===TREN) h1sync='✅ Cùng chiều TĂNG';
+    else if (h4===DUOI&&h1===DUOI) h1sync='✅ Cùng chiều GIẢM';
+    else h1sync='❌ Ngược chiều';
+  }
+
+  let m15sync = '–';
+  if (h4 && m15) {
+    if (h4===KEP) m15sync='⚠️ H4 kẹp';
+    else if (m15===KEP) m15sync='⚠️ M15 kẹp';
+    else if (h4===TREN&&m15===TREN) m15sync='✅ Cùng chiều TĂNG';
+    else if (h4===DUOI&&m15===DUOI) m15sync='✅ Cùng chiều GIẢM';
+    else m15sync='❌ Ngược chiều';
+  }
+
+  if (!h4) return { h4trend:'–', h1sync:'–', m15sync:'–', ket:'–', advice:'⬅️ Nhập vị trí H4 để bắt đầu đánh giá.' };
+
+  const h1ok    = h1sync.includes('Cùng');
+  const m15ok   = m15sync.includes('Cùng');
+  const h1nguoc = h1sync.includes('Ngược');
+  const m15nguoc= m15sync.includes('Ngược');
+  const h1kep   = h1sync.includes('kẹp');
+  const m15kep  = m15sync.includes('kẹp');
+  const zone    = r.zone, pa = r.pa, dow = r.dow, news = r.news;
+  const hasNews = news === NEWS_WARN;
+  const allFrameOk = h1ok && m15ok;
+  const fullEntry  = allFrameOk && zone===ZOK && pa===PAOK && dow===DOWOK;
+
+  let ket = '–';
+  if (h4===KEP || h1nguoc || m15nguoc || h1kep || m15kep) ket='❌ ĐỨNG NGOÀI';
+  else if (fullEntry) ket='✅ VÀO LỆNH';
+  else if (allFrameOk && (zone===ZOK||zone===ZAP) && (dow===DOWOK||dow===DOWFORM)) ket='⏳ CHỜ THÊM';
+  else if (allFrameOk) ket='⏳ CHỜ THÊM';
+  else if (h4 && h1 && m15) ket='❌ ĐỨNG NGOÀI';
+
+  let advice = '';
+  if (h4===KEP) advice='⛔ H4 KẸP GIỮA 2 EMA – không có xu thế. Đứng ngoài tuyệt đối.';
+  else if (h1nguoc) advice='⛔ XUNG ĐỘT H1/H4 – H1 đi ngược chiều H4. Không vào lệnh.';
+  else if (m15nguoc) advice='⛔ XUNG ĐỘT M15/H4 – M15 đi ngược chiều H4. Không vào lệnh.';
+  else if (h1kep) advice='⚠️ H1 KẸP GIỮA 2 EMA – xu thế H1 chưa rõ. Chưa vào.';
+  else if (m15kep) advice='⚠️ M15 KẸP GIỮA 2 EMA – xu thế M15 chưa rõ. Chưa vào.';
+  else if (fullEntry && hasNews) advice='✅ ĐỦ ĐIỀU KIỆN KỸ THUẬT nhưng có tin tức. Giảm size 50%, SL chặt hơn.';
+  else if (fullEntry) advice='✅ ĐỦ ĐIỀU KIỆN VÀO LỆNH. H4+H1+M15 đồng thuận ✓ Đúng vùng EMA ✓ Hành vi giá rõ ✓ Phá trend + tạo Dow ✓. SL dưới/trên EMA 89. Quản lý vốn 1–2%.';
+  else if (allFrameOk && zone===ZNO) advice='⏳ KHUNG ĐỒNG THUẬN – chờ giá hồi về vùng EMA. Không đuổi giá.';
+  else if (allFrameOk && zone===ZAP && dow===DOWNO) advice='⏳ GIÁ TIẾP CẬN VÙNG EMA nhưng chưa phá trend + tạo Dow.';
+  else if (allFrameOk && zone===ZAP && dow===DOWFORM) advice='⏳ GIÁ TIẾP CẬN VÙNG EMA + DOW ĐANG HÌNH THÀNH. Chuẩn bị vào.';
+  else if (allFrameOk && zone===ZAP && dow===DOWOK) advice='⏳ ĐÃ TẠO DOW + TIẾP CẬN VÙNG EMA. Chờ nến xác nhận hành vi giá.';
+  else if (allFrameOk && zone===ZOK && dow===DOWNO) advice='⏳ ĐÚNG VÙNG EMA nhưng CHƯA PHÁ TREND + TẠO DOW – bắt buộc phải có.';
+  else if (allFrameOk && zone===ZOK && dow===DOWFORM) advice='⏳ ĐÚNG VÙNG EMA + DOW ĐANG HÌNH THÀNH. Theo dõi sát.';
+  else if (allFrameOk && zone===ZOK && pa===PAWEAK && dow===DOWOK) advice='⏳ DOW OK + ĐÚNG VÙNG EMA nhưng tín hiệu hành vi giá yếu. Chờ 1–2 nến xác nhận.';
+  else if (allFrameOk && zone===ZOK && pa===PANO && dow===DOWOK) advice='⏳ DOW OK + ĐÚNG VÙNG EMA nhưng chưa có hành vi giá. Chờ pin bar/engulfing.';
+  else if (allFrameOk) advice='⏳ KHUNG ĐỒNG THUẬN. Cần thêm: (1) Giá hồi về vùng EMA (2) Phá trend+Dow (3) Hành vi giá.';
+  else advice='⏳ Nhập đầy đủ H1, M15 để nhận đánh giá chi tiết.';
+
+  return { h4trend, h1sync, m15sync, ket, advice };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER CHECKLIST
+// ═══════════════════════════════════════════════════════════════
+function autoClass(val) {
+  if (!val||val==='–') return '';
+  if (val.includes('VÀO LỆNH')) return 'auto-vao';
+  if (val.includes('CHỜ')) return 'auto-cho';
+  if (val.includes('ĐỨNG NGOÀI')) return 'auto-ngoai';
+  if (val.includes('TĂNG')&&val.includes('⬆️')) return 'auto-tang';
+  if (val.includes('GIẢM')&&val.includes('⬇️')) return 'auto-giam';
+  if (val.includes('Sideway')) return 'auto-side';
+  if (val.includes('Cùng')) return 'auto-dong';
+  if (val.includes('Ngược')) return 'auto-nguoc';
+  if (val.includes('kẹp')||val.includes('Kẹp')) return 'auto-kep';
+  return '';
+}
+
+function selOpts(opts, val) {
+  return opts.map(o=>`<option value="${o}"${val===o?' selected':''}>${o}</option>`).join('');
+}
+
+function renderAll() {
+  const tbody = document.getElementById('cl-body');
+  tbody.innerHTML = rows.map((r,i) => {
+    const c = computeRow(r);
+    const advClass = c.ket.includes('VÀO')?'a-vao':c.ket.includes('CHỜ')?'a-cho':c.ket.includes('ĐỨNG')?'a-ngoai':'';
+    return `<tr data-id="${r.id}">
+      <td class="row-num sc1">${i+1}</td>
+      <td class="sc2"><input type="date" class="cl-input" value="${r.date}" onchange="updateRow(${r.id},'date',this.value)"/></td>
+      <td class="sc3"><input class="cl-input" style="font-weight:600;text-transform:uppercase" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="updateRow(${r.id},'pair',this.value.toUpperCase())"/></td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'h4pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.h4pos)}</select></td>
+      <td class="auto-cell ${autoClass(c.h4trend)}">${c.h4trend}</td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'h1pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.h1pos)}</select></td>
+      <td class="auto-cell ${autoClass(c.h1sync)}">${c.h1sync}</td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'m15pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.m15pos)}</select></td>
+      <td class="auto-cell ${autoClass(c.m15sync)}">${c.m15sync}</td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'zone',this.value)"><option value="">– chọn –</option>${selOpts(OPT.zone,r.zone)}</select></td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'pa',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pa,r.pa)}</select></td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'dow',this.value)"><option value="">– chọn –</option>${selOpts(OPT.dow,r.dow)}</select></td>
+      <td><select class="cl-select" onchange="updateRow(${r.id},'news',this.value)"><option value="">– chọn –</option>${selOpts(OPT.news,r.news)}</select></td>
+      <td class="auto-cell ${autoClass(c.ket)}">${c.ket}</td>
+      <td class="auto-advice ${advClass}" onmouseenter="showTip(event,'${c.advice.replace(/'/g,'&#39;')}')" onmouseleave="hideTip()">${c.advice}</td>
+      <td><button class="del-btn" onclick="deleteRow(${r.id})" title="Xoá"><i class="ti ti-trash" style="font-size:13px"></i></button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="17" style="text-align:center;padding:2rem;color:var(--text3)">Chưa có dữ liệu. Bấm <strong>+ Thêm cặp</strong> để bắt đầu.</td></tr>`;
+  renderDashboard();
+}
+
+function renderAuto(id) {
+  const r = rows.find(r=>r.id===id);
+  if (!r) return;
+  const c = computeRow(r);
+  const row = document.querySelector(`tr[data-id="${id}"]`);
+  if (!row) return;
+  const tds = row.querySelectorAll('td');
+  [[4,c.h4trend],[6,c.h1sync],[8,c.m15sync],[13,c.ket]].forEach(([i,v])=>{
+    tds[i].className='auto-cell '+autoClass(v);
+    tds[i].textContent=v;
+  });
+  const advClass=c.ket.includes('VÀO')?'a-vao':c.ket.includes('CHỜ')?'a-cho':c.ket.includes('ĐỨNG')?'a-ngoai':'';
+  tds[14].className='auto-advice '+advClass;
+  tds[14].textContent=c.advice;
+  tds[14].onmouseenter=e=>showTip(e,c.advice);
+  tds[14].onmouseleave=hideTip;
+  renderDashboard();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════════
+function showTip(e,txt){
+  const t=document.getElementById('tooltip');
+  t.textContent=txt; t.style.display='block';
+  t.style.left=Math.min(e.clientX+12,window.innerWidth-340)+'px';
+  t.style.top=(e.clientY-10)+'px';
+}
+function hideTip(){ document.getElementById('tooltip').style.display='none'; }
+
+// ═══════════════════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════════════════
+function confirmClear(){ document.getElementById('modal-clear').classList.add('open'); }
+function confirmClearJournal(){ document.getElementById('modal-clear-journal').classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function clearAll(){ rows=[]; autoSave(); renderAll(); closeModal('modal-clear'); }
+function clearJournal(){ jRows=[]; jAutoSave(); renderJournal(); renderPerformance(); closeModal('modal-clear-journal'); }
+
+// ═══════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function renderDashboard() {
+  const allComputed = rows.map(r=>({...r,...computeRow(r)})).filter(r=>r.pair&&r.date);
+  const dates = [...new Set(allComputed.map(r=>r.date))].sort((a,b)=>b.localeCompare(a));
+  const container = document.getElementById('db-content');
+
+  if (!dates.length) {
+    container.innerHTML=`<div class="empty-db"><i class="ti ti-chart-candle"></i><p>Chưa có dữ liệu. Vào tab <strong>Checklist</strong> để nhập.</p></div>`;
+    document.getElementById('date-btns').innerHTML='';
+    return;
+  }
+
+  if (!selectedDate || !dates.includes(selectedDate)) selectedDate = dates[0];
+
+  document.getElementById('date-btns').innerHTML = dates.map(d=>{
+    const [y,m,dd]=d.split('-');
+    return `<button class="dbt${d===selectedDate?' active':''}" onclick="selectDate('${d}')">${dd}/${m}/${y}</button>`;
+  }).join('');
+
+  renderDbContent(allComputed.filter(r=>r.date===selectedDate));
+}
+
+function selectDate(d) { selectedDate=d; renderDashboard(); }
+
+function renderDbContent(filtered) {
+  const vao=filtered.filter(r=>r.ket.includes('VÀO LỆNH'));
+  const cho=filtered.filter(r=>r.ket.includes('CHỜ'));
+  const ngoai=filtered.filter(r=>r.ket.includes('ĐỨNG NGOÀI'));
+  const total=filtered.length;
+
+  document.getElementById('db-content').innerHTML=`
+  <div class="metric-row">
+    <div class="mc"><div class="mi">📊</div><div class="ml">Tổng cặp</div><div class="mv" style="color:var(--blue-light)">${total}</div><div class="ms">trong ngày</div></div>
+    <div class="mc"><div class="mi">✅</div><div class="ml">Vào lệnh</div><div class="mv" style="color:var(--green-mid)">${vao.length}</div><div class="ms">đủ điều kiện</div></div>
+    <div class="mc"><div class="mi">⏳</div><div class="ml">Chờ thêm</div><div class="mv" style="color:var(--amber-mid)">${cho.length}</div><div class="ms">theo dõi</div></div>
+    <div class="mc"><div class="mi">❌</div><div class="ml">Đứng ngoài</div><div class="mv" style="color:var(--red-mid)">${ngoai.length}</div><div class="ms">không đủ</div></div>
+  </div>
+  <div class="charts-row">
+    <div class="cc">
+      <div class="cc-title">Số lượng cặp theo trạng thái</div>
+      <div class="cc-sub">So sánh các nhóm trong ngày</div>
+      <div class="legend-row">
+        <span><span class="ld" style="background:#639922"></span>Vào lệnh</span>
+        <span><span class="ld" style="background:#BA7517"></span>Chờ thêm</span>
+        <span><span class="ld" style="background:#E24B4A"></span>Đứng ngoài</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px"><canvas id="barChart"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="cc-title">Phân bổ tín hiệu</div>
+      <div class="cc-sub">Tỷ lệ theo loại kết luận</div>
+      <div class="legend-row">
+        <span><span class="ld" style="background:#639922"></span>Vào ${total?Math.round(vao.length/total*100):0}%</span>
+        <span><span class="ld" style="background:#BA7517"></span>Chờ ${total?Math.round(cho.length/total*100):0}%</span>
+        <span><span class="ld" style="background:#E24B4A"></span>Ngoài ${total?Math.round(ngoai.length/total*100):0}%</span>
+      </div>
+      <div style="position:relative;width:100%;height:200px"><canvas id="donutChart"></canvas></div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="tc-header"><div class="cc-title">Chi tiết cặp tiền</div></div>
+    <table class="rt"><thead><tr>
+      <th>Cặp</th><th>H4 Xu thế</th><th>H1 Đồng thuận</th><th>M15 Đồng thuận</th><th>Kết luận</th><th>Lời khuyên</th>
+    </tr></thead><tbody>${filtered.map(r=>{
+      const b=r.ket.includes('VÀO LỆNH')?`<span class="badge bv">✅ Vào lệnh</span>`:r.ket.includes('CHỜ')?`<span class="badge bc">⏳ Chờ thêm</span>`:r.ket==='–'?`<span style="color:var(--text3);font-size:11px">–</span>`:`<span class="badge bn">❌ Đứng ngoài</span>`;
+      const short=r.advice.length>55?r.advice.slice(0,55)+'…':r.advice;
+      return `<tr><td style="font-weight:700">${r.pair||'–'}</td><td style="font-size:11px">${r.h4trend||'–'}</td><td style="font-size:11px">${r.h1sync||'–'}</td><td style="font-size:11px">${r.m15sync||'–'}</td><td>${b}</td><td class="adv-td" onmouseenter="showTip(event,'${r.advice.replace(/'/g,'&#39;')}')" onmouseleave="hideTip()">${short||'–'}</td></tr>`;
+    }).join('')}</tbody></table>
+  </div>`;
+
+  setTimeout(()=>renderCharts(vao.length,cho.length,ngoai.length,total),50);
+}
+
+function renderCharts(v,c,n,total) {
+  if(barInst){barInst.destroy();barInst=null;}
+  if(donutInst){donutInst.destroy();donutInst=null;}
+  const bc=document.getElementById('barChart');
+  const dc=document.getElementById('donutChart');
+  if(!bc||!dc) return;
+  barInst=new Chart(bc,{type:'bar',data:{labels:['Vào lệnh','Chờ thêm','Đứng ngoài'],datasets:[{data:[v,c,n],backgroundColor:['#639922','#BA7517','#E24B4A'],borderRadius:8,barThickness:44}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+  const pct=x=>total>0?Math.round(x/total*100):0;
+  donutInst=new Chart(dc,{type:'doughnut',data:{labels:['Vào lệnh','Chờ thêm','Đứng ngoài'],datasets:[{data:[v,c,n],backgroundColor:['#639922','#BA7517','#E24B4A'],borderWidth:3,borderColor:'transparent',hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${pct(ctx.parsed)}%)`}}}}});
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='dashboard') renderDashboard();
+  if(id==='journal') renderJournal();
+  if(id==='performance') renderPerformance();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// JOURNAL
+// ═══════════════════════════════════════════════════════════════
+function todayISO() {
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function newJRow() {
+  return { id:Date.now(), date:todayISO(), pair:'', dir:'', entry:'', sl:'', tp:'', vol:'', pnl:'', status:'', note:'' };
+}
+
+function addJournalRow() { jRows.push(newJRow()); renderJournal(); jAutoSave(); }
+
+function delJRow(id) { jRows=jRows.filter(r=>r.id!==id); renderJournal(); jAutoSave(); renderPerformance(); }
+
+function updJ(id, field, val) {
+  const r=jRows.find(r=>r.id===id);
+  if(!r) return;
+  r[field]=val;
+  if(field==='pnl') {
+    const v=parseFloat(val);
+    if(val===''||isNaN(v)) r.status='';
+    else if(v>0) r.status='Win';
+    else if(v<0) r.status='Loss';
+    else r.status='BE';
+  }
+  jAutoSave();
+  const rrEl=document.getElementById('rr-'+id);
+  if(rrEl) rrEl.textContent=calcRR(r);
+  if(field==='pnl') {
+    const pnlEl=document.getElementById('pnl-'+id);
+    if(pnlEl){ const v=parseFloat(val); pnlEl.style.color=v>0?'var(--green)':v<0?'var(--red)':''; pnlEl.style.fontWeight=v!==0&&val!==''?'600':''; }
+    const stEl=document.getElementById('st-'+id);
+    if(stEl){
+      stEl.className=r.status==='Win'?'win-cell':r.status==='Loss'?'loss-cell':r.status==='BE'?'be-cell':'';
+      stEl.textContent=r.status==='Win'?'✅ Win':r.status==='Loss'?'❌ Loss':r.status==='BE'?'↔️ BE':'–';
+    }
+  }
+  renderPerformance();
+}
+
+function calcRR(r) {
+  const en=parseFloat(r.entry),sl=parseFloat(r.sl),tp=parseFloat(r.tp);
+  if(!en||!sl||!tp||isNaN(en)||isNaN(sl)||isNaN(tp)) return '–';
+  const risk=Math.abs(en-sl),reward=Math.abs(tp-en);
+  if(risk===0) return '–';
+  return '1:'+( reward/risk).toFixed(2);
+}
+
+function renderJournal() {
+  const tb=document.getElementById('jn-body');
+  if(!tb) return;
+  if(!jRows.length){
+    tb.innerHTML='<tr><td colspan="13" style="text-align:center;padding:2rem;color:var(--text3)">Chưa có lệnh nào. Bấm <strong>+ Thêm lệnh</strong> để bắt đầu.</td></tr>';
+    return;
+  }
+  tb.innerHTML=jRows.map((r,i)=>{
+    const rr=calcRR(r);
+    const stCls=r.status==='Win'?'win-cell':r.status==='Loss'?'loss-cell':r.status==='BE'?'be-cell':'';
+    const pnlV=parseFloat(r.pnl);
+    const pnlStyle=pnlV>0?'color:var(--green);font-weight:600':pnlV<0?'color:var(--red);font-weight:600':'';
+    return `<tr>
+<td style="text-align:center;font-size:11px;color:var(--text3);padding:8px 6px">${i+1}</td>
+<td><input type="date" class="ji" value="${r.date}" onchange="updJ(${r.id},'date',this.value)"></td>
+<td><input class="ji" style="text-transform:uppercase;font-weight:600" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="updJ(${r.id},'pair',this.value.toUpperCase())"></td>
+<td><select class="js" onchange="updJ(${r.id},'dir',this.value)">
+  <option value="">–</option>
+  <option value="Buy"${r.dir==='Buy'?' selected':''}>📈 Buy</option>
+  <option value="Sell"${r.dir==='Sell'?' selected':''}>📉 Sell</option>
+</select></td>
+<td><input class="ji" type="number" step="any" placeholder="1.08500" value="${r.entry}" oninput="updJ(${r.id},'entry',this.value)"></td>
+<td><input class="ji" type="number" step="any" placeholder="1.08000" value="${r.sl}" oninput="updJ(${r.id},'sl',this.value)"></td>
+<td><input class="ji" type="number" step="any" placeholder="1.09500" value="${r.tp}" oninput="updJ(${r.id},'tp',this.value)"></td>
+<td><input class="ji" type="number" step="any" placeholder="0.10" value="${r.vol}" oninput="updJ(${r.id},'vol',this.value)"></td>
+<td class="rr-auto" id="rr-${r.id}">${rr}</td>
+<td><input id="pnl-${r.id}" class="ji" type="number" step="any" placeholder="±$" value="${r.pnl}" style="${pnlStyle}" oninput="updJ(${r.id},'pnl',this.value)"></td>
+<td id="st-${r.id}" class="${stCls}" style="text-align:center;padding:8px 10px;font-size:12px;font-weight:600">${stCls?(r.status==='Win'?'✅ Win':r.status==='Loss'?'❌ Loss':'↔️ BE'):'–'}</td>
+<td><input class="ji" style="text-align:left" placeholder="Ghi chú..." value="${r.note||''}" oninput="updJ(${r.id},'note',this.value)"></td>
+<td><button class="btn" style="padding:4px 8px;margin:4px" onclick="delJRow(${r.id})"><i class="ti ti-trash" style="font-size:13px;color:var(--red)"></i></button></td>
+</tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PERFORMANCE
+// ═══════════════════════════════════════════════════════════════
+function renderPerformance() {
+  const months=[...new Set(jRows.map(r=>r.date?r.date.slice(0,7):null).filter(Boolean))].sort().reverse();
+  const sel=document.getElementById('perf-month-filter');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML='<option value="all">Tất cả</option>'+months.map(m=>{
+      const[y,mo]=m.split('-');return`<option value="${m}"${cur===m?' selected':''}>${mo}/${y}</option>`;
+    }).join('');
+  }
+  const monthVal=sel?sel.value:'all';
+  const data=jRows.filter(r=>r.status&&(monthVal==='all'||(r.date&&r.date.startsWith(monthVal))));
+  const pc=document.getElementById('perf-content');
+  if(!pc) return;
+
+  if(!data.length){
+    pc.innerHTML='<div class="empty-db"><i class="ti ti-trophy"></i><p>Chưa có dữ liệu. Vào tab <strong>Nhật ký</strong> để nhập lệnh.</p></div>';
+    return;
+  }
+
+  const wins=data.filter(r=>r.status==='Win');
+  const losses=data.filter(r=>r.status==='Loss');
+  const be=data.filter(r=>r.status==='BE');
+  const total=data.length;
+  const winRate=total>0?(wins.length/total*100).toFixed(1):0;
+  const lossRate=total>0?(losses.length/total*100).toFixed(1):0;
+
+  const rrVals=data.map(r=>calcRR(r)).filter(v=>v!=='–').map(v=>parseFloat(v.split(':')[1]));
+  const avgRR=rrVals.length?(rrVals.reduce((a,b)=>a+b,0)/rrVals.length).toFixed(2):'–';
+
+  const pnls=data.map(r=>parseFloat(r.pnl)||0);
+  const totalPnl=pnls.reduce((a,b)=>a+b,0);
+  const winPnls=wins.map(r=>parseFloat(r.pnl)||0).filter(v=>v>0);
+  const lossPnls=losses.map(r=>parseFloat(r.pnl)||0).filter(v=>v<0);
+  const avgWin=winPnls.length?winPnls.reduce((a,b)=>a+b,0)/winPnls.length:0;
+  const avgLoss=lossPnls.length?lossPnls.reduce((a,b)=>a+b,0)/lossPnls.length:0;
+  const grossWin=winPnls.reduce((a,b)=>a+b,0);
+  const grossLoss=Math.abs(lossPnls.reduce((a,b)=>a+b,0));
+  const pf=grossLoss>0?(grossWin/grossLoss).toFixed(2):grossWin>0?'∞':'–';
+
+  let peak=0,maxDD=0,equity=0;
+  [...data].sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>{
+    equity+=parseFloat(r.pnl)||0;
+    if(equity>peak) peak=equity;
+    const dd=peak-equity; if(dd>maxDD) maxDD=dd;
+  });
+
+  let eq=0;
+  const sorted=[...data].sort((a,b)=>a.date.localeCompare(b.date));
+  const eqPoints=sorted.map(r=>{eq+=parseFloat(r.pnl)||0;return parseFloat(eq.toFixed(2));});
+  const eqLabels=sorted.map((r,i)=>`#${i+1} ${r.pair||''}`);
+
+  const fmtUSD=v=>(v>=0?'+':'')+v.toFixed(2);
+  const fmtPct=v=>v+'%';
+
+  pc.innerHTML=`
+<div class="perf-grid">
+  <div class="perf-card"><div class="pc-label">Tổng lệnh</div><div class="pc-val" style="color:var(--blue)">${total}</div><div class="pc-sub">Win ${wins.length} · Loss ${losses.length} · BE ${be.length}</div></div>
+  <div class="perf-card"><div class="pc-label">Win Rate</div><div class="pc-val" style="color:${parseFloat(winRate)>=50?'var(--green)':'var(--red)'}">${fmtPct(winRate)}</div><div class="pc-sub">Loss ${fmtPct(lossRate)}</div></div>
+  <div class="perf-card"><div class="pc-label">R:R Trung bình</div><div class="pc-val" style="color:var(--blue)">1:${avgRR}</div><div class="pc-sub">${rrVals.length} lệnh</div></div>
+  <div class="perf-card"><div class="pc-label">Profit Factor</div><div class="pc-val" style="color:${pf>=1.5||pf==='∞'?'var(--green)':parseFloat(pf)<1?'var(--red)':'var(--amber)'}">${pf}</div><div class="pc-sub">&gt;1.5 = tốt</div></div>
+  <div class="perf-card"><div class="pc-label">Tổng P&L</div><div class="pc-val" style="color:${totalPnl>=0?'var(--green)':'var(--red)'}">${fmtUSD(totalPnl)}</div><div class="pc-sub">USD</div></div>
+</div>
+<div class="charts-row">
+  <div class="cc">
+    <div class="cc-title">Đường cong vốn (Equity Curve)</div>
+    <div class="cc-sub">Lợi nhuận tích lũy theo từng lệnh</div>
+    <div style="position:relative;width:100%;height:200px"><canvas id="eqChart"></canvas></div>
+  </div>
+  <div class="cc">
+    <div class="cc-title">Phân bổ kết quả</div>
+    <div class="cc-sub">Tỷ lệ Win / Loss / BE</div>
+    <div class="legend-row">
+      <span><span class="ld" style="background:#639922"></span>Win ${wins.length}</span>
+      <span><span class="ld" style="background:#E24B4A"></span>Loss ${losses.length}</span>
+      <span><span class="ld" style="background:#BA7517"></span>BE ${be.length}</span>
+    </div>
+    <div style="position:relative;width:100%;height:200px"><canvas id="wlChart"></canvas></div>
+  </div>
+</div>
+<div class="perf-section">
+  <h3>Phân tích chi tiết</h3>
+  <div class="perf-row"><span class="pr-label">Trung bình Win mỗi lệnh</span><span class="pr-val pr-pos">+${avgWin.toFixed(2)} USD</span></div>
+  <div class="perf-row"><span class="pr-label">Trung bình Loss mỗi lệnh</span><span class="pr-val pr-neg">${avgLoss.toFixed(2)} USD</span></div>
+  <div class="perf-row"><span class="pr-label">Max Drawdown</span><span class="pr-val pr-neg">-${maxDD.toFixed(2)} USD</span></div>
+  <div class="perf-row"><span class="pr-label">Gross Profit</span><span class="pr-val pr-pos">+${grossWin.toFixed(2)} USD</span></div>
+  <div class="perf-row"><span class="pr-label">Gross Loss</span><span class="pr-val pr-neg">-${grossLoss.toFixed(2)} USD</span></div>
+  <div class="perf-row"><span class="pr-label">Expectancy (kỳ vọng/lệnh)</span><span class="pr-val ${totalPnl/total>=0?'pr-pos':'pr-neg'}">${fmtUSD(totalPnl/total)} USD</span></div>
+</div>
+<div class="table-card">
+  <div class="tc-header"><div class="cc-title">Lịch sử lệnh (${monthVal==='all'?'tất cả':'tháng '+monthVal})</div></div>
+  <table class="rt"><thead><tr>
+    <th>#</th><th>Ngày</th><th>Cặp</th><th>Hướng</th><th>Entry</th><th>SL</th><th>TP</th><th>Vol</th><th>R:R</th><th>P&L ($)</th><th>KQ</th><th>Ghi chú</th>
+  </tr></thead><tbody>${sorted.map((r,i)=>{
+    const pnl=parseFloat(r.pnl)||0;
+    const pnlStyle=pnl>0?'color:var(--green);font-weight:600':pnl<0?'color:var(--red);font-weight:600':'';
+    const bk=r.status==='Win'?'bv':r.status==='Loss'?'bn':'bc';
+    return `<tr><td>${i+1}</td><td>${r.date||'–'}</td><td style="font-weight:600">${r.pair||'–'}</td>
+    <td>${r.dir||'–'}</td><td>${r.entry||'–'}</td><td>${r.sl||'–'}</td><td>${r.tp||'–'}</td>
+    <td>${r.vol||'–'}</td><td>${calcRR(r)}</td>
+    <td style="${pnlStyle}">${r.pnl?fmtUSD(pnl):'–'}</td>
+    <td><span class="badge ${bk}">${r.status||'–'}</span></td>
+    <td style="font-size:11px;color:var(--text2)">${r.note||'–'}</td></tr>`;
+  }).join('')}</tbody></table>
+</div>`;
+
+  setTimeout(()=>{
+    const ec=document.getElementById('eqChart');
+    const wc=document.getElementById('wlChart');
+    if(ec) new Chart(ec,{type:'line',data:{labels:eqLabels,datasets:[{data:eqPoints,borderColor:totalPnl>=0?'#639922':'#E24B4A',backgroundColor:totalPnl>=0?'rgba(99,153,34,.08)':'rgba(226,75,74,.08)',fill:true,tension:0.3,pointRadius:3,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`Equity: ${ctx.parsed.y>=0?'+':''}${ctx.parsed.y} USD`}}},scales:{x:{display:false},y:{ticks:{font:{size:10},callback:v=>(v>=0?'+':'')+v},grid:{color:'rgba(128,128,128,.08)'}}}}});
+    if(wc) new Chart(wc,{type:'doughnut',data:{labels:['Win','Loss','BE'],datasets:[{data:[wins.length,losses.length,be.length],backgroundColor:['#639922','#E24B4A','#BA7517'],borderWidth:2,borderColor:'transparent',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} lệnh`}}}}});
+  },50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TWELVE DATA – TỰ ĐỘNG LẤY + PHÂN TÍCH (v3)
+// Lấy: H4 / H1 / M15 position  (1 request/khung, tự tính EMA)
+// Phân tích H1+M15: Vùng EMA (A) + Cấu trúc Dow (B)
+// ═══════════════════════════════════════════════════════════════
+const TD_API_KEY = 'a96a265998354bb5918eda41230c13d6';
+const TD_BASE    = 'https://api.twelvedata.com';
+
+const TD_SYMBOL_MAP = {
+  'EURUSD':'EUR/USD','GBPUSD':'GBP/USD','USDJPY':'USD/JPY',
+  'USDCHF':'USD/CHF','AUDUSD':'AUD/USD','NZDUSD':'NZD/USD',
+  'USDCAD':'USD/CAD','GBPJPY':'GBP/JPY','EURJPY':'EUR/JPY',
+  'EURGBP':'EUR/GBP','AUDJPY':'AUD/JPY','CHFJPY':'CHF/JPY',
+  'XAUUSD':'XAU/USD','XAGUSD':'XAG/USD',
+  'GBPCAD':'GBP/CAD','EURCAD':'EUR/CAD','EURCHF':'EUR/CHF',
+};
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ── Tính EMA từ mảng giá (index 0 = nến MỚI NHẤT) ──────────
+function calcEMA(closes, period) {
+  if (closes.length < period) return null;
+  const arr = [...closes].reverse(); // cũ → mới
+  const k = 2 / (period + 1);
+  let ema = arr.slice(0, period).reduce((a,b)=>a+b,0) / period;
+  for (let i = period; i < arr.length; i++) ema = arr[i]*k + ema*(1-k);
+  return ema;
+}
+
+// ── Lấy time_series → position + raw data để phân tích ─────
+async function fetchCandles(tdSymbol, interval, size=120) {
+  const url = `${TD_BASE}/time_series?symbol=${tdSymbol}&interval=${interval}&outputsize=${size}&apikey=${TD_API_KEY}`;
+  const data = await fetch(url).then(r=>r.json());
+  if (data.status==='error' || !data.values || data.values.length < 90) {
+    console.warn(`[TD] ${tdSymbol} ${interval}:`, data.message||'not enough data');
+    return null;
+  }
+  return data.values; // index 0 = nến mới nhất
+}
+
+// ── (1) Vị trí giá vs EMA ───────────────────────────────────
+function detectPosition(candles) {
+  if (!candles) return null;
+  const closes = candles.map(c=>parseFloat(c.close));
+  const price  = closes[0];
+  const ema34  = calcEMA(closes, 34);
+  const ema89  = calcEMA(closes, 89);
+  if (!ema34||!ema89||isNaN(price)) return null;
+  if (price>ema34 && price>ema89) return '📈 Trên cả 2 EMA';
+  if (price<ema34 && price<ema89) return '📉 Dưới cả 2 EMA';
+  return '↔️ Kẹp giữa';
+}
+
+// ── (A) Phân tích Vùng EMA – khoảng cách % giá vs EMA ──────
+// Ngưỡng: ≤0.12% = đúng vùng, ≤0.40% = tiếp cận, >0.40% = chưa về
+function detectZone(candles) {
+  if (!candles) return null;
+  const closes = candles.map(c=>parseFloat(c.close));
+  const price  = closes[0];
+  const ema34  = calcEMA(closes, 34);
+  const ema89  = calcEMA(closes, 89);
+  if (!ema34||!ema89) return null;
+
+  // Khoảng cách % từ giá đến EMA gần nhất
+  const d34 = Math.abs(price - ema34) / ema34 * 100;
+  const d89 = Math.abs(price - ema89) / ema89 * 100;
+  const minDist = Math.min(d34, d89);
+
+  if (minDist <= 0.12) return '✅ Đúng vùng EMA';
+  if (minDist <= 0.40) return '⏳ Đang tiếp cận';
+  return '❌ Chưa hồi về';
+}
+
+// ── (B) Phân tích cấu trúc Dow – tìm đỉnh/đáy swing ────────
+// Dùng 3 nến pivot: nến giữa cao nhất (đỉnh) hoặc thấp nhất (đáy)
+function detectSwings(candles, lookback=30) {
+  const slice = candles.slice(0, lookback);
+  const highs = [], lows = [];
+  for (let i=1; i<slice.length-1; i++) {
+    const h = parseFloat(slice[i].high);
+    const l = parseFloat(slice[i].low);
+    if (h > parseFloat(slice[i-1].high) && h > parseFloat(slice[i+1].high)) highs.push({i, v:h});
+    if (l < parseFloat(slice[i-1].low)  && l < parseFloat(slice[i+1].low))  lows.push({i, v:l});
+  }
+  return { highs, lows };
+}
+
+function detectDow(candles, position) {
+  if (!candles || !position || position==='↔️ Kẹp giữa') return null;
+  const isBull = position.includes('Trên');
+  const { highs, lows } = detectSwings(candles, 35);
+
+  if (isBull) {
+    // Xu thế tăng: cần HL (higher low) gần EMA = giá đã tạo đáy cao hơn đáy trước
+    if (lows.length >= 2) {
+      // lows[0] = đáy gần nhất (index nhỏ = nến mới hơn trong slice)
+      const recentLow  = lows[0].v;
+      const prevLow    = lows[1].v;
+      const recentHigh = highs.length ? highs[0].v : null;
+      const prevHigh   = highs.length>1 ? highs[1].v : null;
+
+      const hasHL = recentLow > prevLow;   // Higher Low
+      const hasHH = recentHigh && prevHigh && recentHigh > prevHigh; // Higher High
+
+      if (hasHL && hasHH) return '✅ Đã phá trend + tạo Dow';
+      if (hasHL)           return '⚠️ Đang hình thành';
+      // Giá đang giảm test vùng EMA – chưa có HL
+      return '❌ Chưa phá trend';
+    }
+  } else {
+    // Xu thế giảm: cần LH (lower high) gần EMA
+    if (highs.length >= 2) {
+      const recentHigh = highs[0].v;
+      const prevHigh   = highs[1].v;
+      const recentLow  = lows.length ? lows[0].v : null;
+      const prevLow    = lows.length>1 ? lows[1].v : null;
+
+      const hasLH = recentHigh < prevHigh;  // Lower High
+      const hasLL = recentLow && prevLow && recentLow < prevLow; // Lower Low
+
+      if (hasLH && hasLL) return '✅ Đã phá trend + tạo Dow';
+      if (hasLH)           return '⚠️ Đang hình thành';
+      return '❌ Chưa phá trend';
+    }
+  }
+  return '❌ Chưa phá trend';
+}
+
+// ── MAIN FETCH ───────────────────────────────────────────────
+async function fetchAllMarketData() {
+  const btn = document.getElementById('fetch-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader" style="animation:spin 1s linear infinite"></i><span>Đang lấy...</span>';
+  showSyncBar('syncing','⏳ Bắt đầu phân tích H4/H1/M15 – mỗi cặp ~5 giây...');
+
+  const today = todayStr();
+  const todayRows = rows.filter(r=>r.date===today && r.pair);
+  const pairs = [...new Set(todayRows.map(r=>r.pair.toUpperCase()))];
+
+  if (!pairs.length) {
+    showSyncBar('err','❌ Không có cặp tiền nào hôm nay. Thêm cặp vào Checklist trước.');
+    resetFetchBtn(); return;
+  }
+
+  let updated=0, errors=[];
+
+  for (let pi=0; pi<pairs.length; pi++) {
+    const pair = pairs[pi];
+    const sym  = TD_SYMBOL_MAP[pair];
+    if (!sym) { errors.push(`${pair}: không hỗ trợ`); continue; }
+
+    try {
+      // ── H4: chỉ cần position ──────────────────────────────
+      showSyncBar('syncing',`⏳ [${pi+1}/${pairs.length}] ${pair} – H4...`);
+      const c4h = await fetchCandles(sym,'4h',120);
+      await sleep(700);
+
+      // ── H1: position + zone + dow ─────────────────────────
+      showSyncBar('syncing',`⏳ [${pi+1}/${pairs.length}] ${pair} – H1...`);
+      const c1h = await fetchCandles(sym,'1h',120);
+      await sleep(700);
+
+      // ── M15: position + zone + dow ────────────────────────
+      showSyncBar('syncing',`⏳ [${pi+1}/${pairs.length}] ${pair} – M15...`);
+      const c15 = await fetchCandles(sym,'15min',120);
+      await sleep(900);
+
+      // ── Tính các giá trị ─────────────────────────────────
+      const pos4h = detectPosition(c4h);
+      const pos1h = detectPosition(c1h);
+      const pos15 = detectPosition(c15);
+
+      // Zone: lấy từ H1 (tin cậy hơn M15), fallback M15
+      const zone1h = detectZone(c1h);
+      const zone15 = detectZone(c15);
+      // Ưu tiên: nếu cả 2 cùng đánh giá → dùng đó; nếu khác → H1 quyết định
+      const zone = zone1h || zone15;
+
+      // Dow: phân tích trên M15 (chi tiết nhất), confirm bằng H1
+      const dow15 = detectDow(c15, pos4h);
+      const dow1h = detectDow(c1h, pos4h);
+      // Nếu M15 đã xác nhận đầy đủ → tin; nếu chưa → dùng H1
+      let dow;
+      if (dow15 === '✅ Đã phá trend + tạo Dow') dow = dow15;
+      else if (dow1h === '✅ Đã phá trend + tạo Dow') dow = dow1h;
+      else if (dow15 === '⚠️ Đang hình thành' || dow1h === '⚠️ Đang hình thành') dow = '⚠️ Đang hình thành';
+      else dow = '❌ Chưa phá trend';
+
+      // ── Cập nhật vào rows ─────────────────────────────────
+      rows.filter(r=>r.date===today && r.pair.toUpperCase()===pair).forEach(r=>{
+        if (pos4h) r.h4pos  = pos4h;
+        if (pos1h) r.h1pos  = pos1h;
+        if (pos15) r.m15pos = pos15;
+        if (zone)  r.zone   = zone;
+        if (dow)   r.dow    = dow;
+        // PA (hành vi giá) KHÔNG tự động – cần nhìn chart
+      });
+
+      updated++;
+    } catch(e) {
+      errors.push(`${pair}: ${e.message}`);
+      await sleep(1500);
+    }
+  }
+
+  autoSave();
+  renderAll();
+
+  const note = '(PA/hành vi giá cần kiểm tra thủ công)';
+  if (errors.length && updated===0) {
+    showSyncBar('err',`❌ Không lấy được dữ liệu: ${errors.join(' | ')}`);
+  } else if (errors.length) {
+    showSyncBar('err',`⚠️ Xong ${updated}/${pairs.length} cặp. ${note}. Lỗi: ${errors.join(', ')}`);
+  } else {
+    showSyncBar('ok',`✅ Đã phân tích ${updated} cặp: H4+H1+M15 vị trí ✓ Vùng EMA ✓ Cấu trúc Dow ✓ — ${note}`);
+  }
+  resetFetchBtn();
+}
+
+function resetFetchBtn() {
+  const btn = document.getElementById('fetch-btn');
+  if (!btn) return;
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-antenna"></i><span>Lấy dữ liệu</span>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════════
+// CSS spin animation
+const style=document.createElement('style');
+style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+document.head.appendChild(style);
+
+init();
+</script>
+</body>
+</html>
