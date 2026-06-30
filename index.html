@@ -551,7 +551,7 @@ async function syncFromSheet() {
 
       if (sheetsCount > localCount) {
         // Sheets nhiều hơn → có thể thiết bị khác đã thêm dữ liệu
-        rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) }));
+        rows = dedupeIds(clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
         localStorage.setItem(LS_CL, JSON.stringify(rows));
         clUpdated = true;
       } else if (sheetsCount === localCount) {
@@ -574,7 +574,7 @@ async function syncFromSheet() {
       const sheetsJCount = jnData.length;
 
       if (sheetsJCount > localJCount) {
-        jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) }));
+        jRows = dedupeIds(jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) })));
         localStorage.setItem(LS_JN, JSON.stringify(jRows));
         jnUpdated = true;
       } else if (sheetsJCount === localJCount) {
@@ -657,11 +657,11 @@ async function forceSyncFromSheet() {
   try {
     const [clData, jnData] = await Promise.all([apiGet('checklist'), apiGet('journal')]);
     if (clData && clData.length > 0) {
-      rows = clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) }));
+      rows = dedupeIds(clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
       localStorage.setItem(LS_CL, JSON.stringify(rows));
     }
     if (jnData && jnData.length > 0) {
-      jRows = jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) }));
+      jRows = dedupeIds(jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) })));
       localStorage.setItem(LS_JN, JSON.stringify(jRows));
     }
     renderAll();
@@ -723,6 +723,19 @@ const OPT = {
 // INIT – load from localStorage
 // ═══════════════════════════════════════════════════════════════
 // Chuẩn hóa ngày về format YYYY-MM-DD cho input type=date
+// Sửa các id trùng nhau sau khi kéo dữ liệu từ Sheets về (phòng dữ liệu cũ bị lỗi)
+function dedupeIds(arr) {
+  const seen = new Set();
+  return arr.map(r => {
+    let id = r.id;
+    while (seen.has(id)) {
+      id = id + Math.random() * 0.001; // cộng thêm số thập phân nhỏ để tách biệt
+    }
+    seen.add(id);
+    return { ...r, id };
+  });
+}
+
 function normalizeDate(val) {
   if (!val) return '';
   var s = String(val).trim();
@@ -777,8 +790,16 @@ function todayStr() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+// Bộ đếm đảm bảo ID luôn duy nhất, kể cả khi tạo nhiều dòng trong cùng 1 mili-giây
+let _idCounter = 0;
+function generateUniqueId() {
+  _idCounter++;
+  // Kết hợp timestamp + counter để tránh trùng khi tạo hàng loạt (vd: addTodayRows)
+  return Date.now() * 1000 + (_idCounter % 1000);
+}
+
 function newRow(dateVal) {
-  return { id: Date.now() + Math.random(), date: dateVal || todayStr(),
+  return { id: generateUniqueId(), date: dateVal || todayStr(),
            pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'' };
 }
 
@@ -1071,7 +1092,7 @@ function todayISO() {
 }
 
 function newJRow() {
-  return { id:Date.now(), date:todayISO(), pair:'', dir:'', entry:'', sl:'', tp:'', vol:'', pnl:'', status:'', note:'' };
+  return { id:generateUniqueId(), date:todayISO(), pair:'', dir:'', entry:'', sl:'', tp:'', vol:'', pnl:'', status:'', note:'' };
 }
 
 function addJournalRow() { jRows.push(newJRow()); renderJournal(); jAutoSave(); }
