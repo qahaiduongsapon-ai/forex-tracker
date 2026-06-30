@@ -739,22 +739,25 @@ function dedupeIds(arr) {
 function normalizeDate(val) {
   if (!val) return '';
   var s = String(val).trim();
-  // Đã đúng format YYYY-MM-DD
+
+  // Đã đúng format YYYY-MM-DD → trả về luôn, không qua Date object
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
-  // Format MM/DD/YYYY hoặc M/D/YYYY
+
+  // Format có timestamp kiểu "2026-06-29T00:00:00.000Z" → cắt lấy phần ngày
+  var isoMatch = s.match(/^(\d{4}-\d{2}-\d{2})T/);
+  if (isoMatch) return isoMatch[1];
+
+  // Format MM/DD/YYYY hoặc M/D/YYYY (Google Sheets thường trả về dạng này)
   var m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return m[3] + '-' + m[1].padStart(2,'0') + '-' + m[2].padStart(2,'0');
-  // Format DD/MM/YYYY
-  var m2 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  // Thử parse bằng Date object
+
+  // Trường hợp khác (hiếm gặp) → parse bằng Date nhưng lấy giá trị local, KHÔNG dùng UTC
+  // vì input đã là ngày thuần (không có giờ), dùng local components là đúng nhất
   var d = new Date(s);
   if (!isNaN(d.getTime())) {
-    var y = d.getFullYear();
+    var y  = d.getFullYear();
     var mo = String(d.getMonth()+1).padStart(2,'0');
     var dd = String(d.getDate()).padStart(2,'0');
-    // Tránh lỗi timezone: dùng UTC
-    d = new Date(s + (s.includes('T') ? '' : 'T00:00:00'));
-    y = d.getUTCFullYear(); mo = String(d.getUTCMonth()+1).padStart(2,'0'); dd = String(d.getUTCDate()).padStart(2,'0');
     return y + '-' + mo + '-' + dd;
   }
   return s;
