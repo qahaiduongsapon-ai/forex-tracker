@@ -680,12 +680,32 @@ function resetSaveBtn() {
   btn.disabled = false;
 }
 
-// Auto-save local on change
+// Auto-save local on change + tự động đẩy lên Sheets sau 3s không thao tác
+let _autoSyncTimer = null;
+function scheduleAutoSyncToSheets() {
+  const url = getUrl();
+  if (!url) return; // chưa kết nối Sheets thì chỉ lưu local
+  if (_autoSyncTimer) clearTimeout(_autoSyncTimer);
+  _autoSyncTimer = setTimeout(async () => {
+    try {
+      await Promise.all([
+        apiSave('checklist', rows),
+        apiSave('journal', jRows)
+      ]);
+      showSyncBar('ok', `☁️ Tự động lưu lên Sheets lúc ${new Date().toLocaleTimeString('vi-VN')}`);
+    } catch(e) {
+      showSyncBar('err', '⚠️ Tự động lưu Sheets lỗi: ' + e.message + ' — dữ liệu vẫn an toàn ở local.');
+    }
+  }, 3000); // chờ 3 giây sau lần sửa cuối mới gửi, tránh spam request
+}
+
 function autoSave() {
   localStorage.setItem(LS_CL, JSON.stringify(rows));
+  scheduleAutoSyncToSheets();
 }
 function jAutoSave() {
   localStorage.setItem(LS_JN, JSON.stringify(jRows));
+  scheduleAutoSyncToSheets();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1475,6 +1495,15 @@ function resetFetchBtn() {
 const style=document.createElement('style');
 style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
 document.head.appendChild(style);
+
+// Cảnh báo nếu đóng tab khi còn dữ liệu chưa kịp đồng bộ lên Sheets (trong vòng debounce 3s)
+window.addEventListener('beforeunload', (e) => {
+  if (_autoSyncTimer) {
+    e.preventDefault();
+    e.returnValue = 'Dữ liệu đang được lưu lên Google Sheets, vui lòng đợi vài giây trước khi đóng trang.';
+    return e.returnValue;
+  }
+});
 
 init();
 </script>
