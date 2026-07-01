@@ -208,7 +208,74 @@ table.rt tr:hover td{background:var(--surface2)}
 .pr-pos{color:var(--green)!important}
 .pr-neg{color:var(--red)!important}
 
-/* ── RESPONSIVE ── */
+/* ── SMC STYLES ── */
+.smc-wrap{background:#0f1117;min-height:calc(100vh - 54px);padding:1.25rem}
+:root{
+  --smc-bg:#0f1117;--smc-bg2:#181c27;--smc-bg3:#1f2437;
+  --smc-text:#e8ecf0;--smc-text2:#8a94a8;--smc-text3:#4a5268;
+  --smc-border:#252c3f;--smc-border2:#2e3650;
+  --smc-bull:#22c55e;--smc-bull-bg:rgba(34,197,94,.1);
+  --smc-bear:#ef4444;--smc-bear-bg:rgba(239,68,68,.1);
+  --smc-gold:#f59e0b;--smc-gold-bg:rgba(245,158,11,.1);
+  --smc-blue:#3b82f6;--smc-blue-bg:rgba(59,130,246,.1);
+}
+.smc-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
+.smc-toolbar h2{font-size:15px;font-weight:600;flex:1;color:var(--smc-text)}
+.smc-btn{font-size:12px;padding:6px 12px;border-radius:6px;border:0.5px solid var(--smc-border2);background:var(--smc-bg3);color:var(--smc-text);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.smc-btn:hover{background:var(--smc-border);color:var(--smc-text)}
+.smc-btn-primary{background:var(--smc-blue-bg);border-color:var(--smc-blue);color:var(--smc-blue)}
+.smc-btn-danger{background:var(--smc-bear-bg);border-color:var(--smc-bear);color:var(--smc-bear)}
+.smc-tbl-wrap{overflow-x:auto;border-radius:14px;border:0.5px solid var(--smc-border2);background:var(--smc-bg2);box-shadow:0 2px 12px rgba(0,0,0,.4)}
+.smc-tbl{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+.smc-tbl th{background:var(--smc-bg3);font-size:11px;font-weight:600;color:var(--smc-text2);padding:9px 10px;border-bottom:0.5px solid var(--smc-border2);border-right:0.5px solid var(--smc-border);white-space:nowrap;text-align:center}
+.smc-tbl td{padding:0;border-bottom:0.5px solid var(--smc-border);border-right:0.5px solid var(--smc-border);vertical-align:middle;background:var(--smc-bg2)}
+.smc-tbl tr:last-child td{border-bottom:none}
+.smc-tbl tr:hover td{background:var(--smc-bg3)!important}
+.smc-gh-htf{background:#1a2035!important;color:#818cf8!important}
+.smc-gh-ltf{background:#1a2820!important;color:#4ade80!important}
+.smc-gh-ob{background:#27201a!important;color:#fb923c!important}
+.smc-gh-fvg{background:#1a2027!important;color:#38bdf8!important}
+.smc-gh-liq{background:#271a27!important;color:#c084fc!important}
+.smc-gh-res{background:#201a1a!important;color:#f87171!important}
+.smc-s1{position:sticky;left:0;z-index:5;background:var(--smc-bg2)!important}
+.smc-s2{position:sticky;left:38px;z-index:5;background:var(--smc-bg2)!important;border-right:1.5px solid var(--smc-border2)!important}
+.smc-tbl tr:hover td.smc-s1,.smc-tbl tr:hover td.smc-s2{background:var(--smc-bg3)!important}
+.smc-ci{width:100%;border:none;background:transparent;color:var(--smc-text);font-size:12px;font-family:inherit;padding:8px;outline:none}
+.smc-ci:focus{background:var(--smc-blue-bg)}
+.smc-cs{width:100%;border:none;background:transparent;color:var(--smc-text);font-size:12px;font-family:inherit;padding:7px 5px;outline:none;cursor:pointer;appearance:none}
+.smc-cs:focus{background:var(--smc-blue-bg)}
+.smc-cs option{background:var(--smc-bg2)}
+.smc-ac{padding:7px 10px;font-size:11px;font-weight:600;text-align:center;white-space:nowrap}
+.smc-bull{color:var(--smc-bull);background:var(--smc-bull-bg)}
+.smc-bear{color:var(--smc-bear);background:var(--smc-bear-bg)}
+.smc-wait{color:var(--smc-gold);background:var(--smc-gold-bg)}
+.smc-neut{color:var(--smc-text2);background:var(--smc-bg3)}
+.smc-adv{padding:8px 10px;font-size:11px;line-height:1.55;min-width:240px;max-width:300px;white-space:normal;word-break:break-word;color:var(--smc-text2)}
+.smc-rn{font-size:11px;color:var(--smc-text3);text-align:center;padding:8px 5px;min-width:38px}
+.smc-del{background:transparent;border:none;color:var(--smc-text3);cursor:pointer;padding:5px 8px}
+.smc-del:hover{color:var(--smc-bear)}
+.smc-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:.4px}
+.smc-bv{background:var(--smc-bull-bg);color:var(--smc-bull)}
+.smc-bb{background:var(--smc-bear-bg);color:var(--smc-bear)}
+.smc-bn{background:var(--smc-gold-bg);color:var(--smc-gold)}
+.smc-bx{background:var(--smc-bg3);color:var(--smc-text2)}
+.smc-dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+.smc-dash-card{background:var(--smc-bg2);border:0.5px solid var(--smc-border2);border-radius:14px;padding:14px 16px}
+.smc-dc-label{font-size:11px;color:var(--smc-text3);margin-bottom:4px}
+.smc-dc-val{font-size:26px;font-weight:700}
+.smc-charts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.smc-chart-card{background:var(--smc-bg2);border:0.5px solid var(--smc-border2);border-radius:14px;padding:16px}
+.smc-chart-card h3{font-size:12px;font-weight:600;color:var(--smc-text2);margin-bottom:12px}
+.smc-leg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;color:var(--smc-text2)}
+.smc-ld{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+.smc-sum-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.smc-sum-tbl th{text-align:left;color:var(--smc-text3);font-size:11px;padding:6px 10px;border-bottom:0.5px solid var(--smc-border)}
+.smc-sum-tbl td{padding:7px 10px;border-bottom:0.5px solid var(--smc-border);vertical-align:middle;color:var(--smc-text)}
+.smc-sum-tbl tr:last-child td{border-bottom:none}
+.smc-sum-tbl tr:hover td{background:var(--smc-bg3)}
+.smc-empty{text-align:center;padding:3rem;color:var(--smc-text3)}
+@media(max-width:700px){.smc-dash-grid{grid-template-columns:repeat(2,1fr)}.smc-charts-row{grid-template-columns:1fr}}
+@media(pointer:coarse){.smc-ci,.smc-cs{font-size:16px!important}}
 @media(max-width:700px){
   .metric-row{grid-template-columns:repeat(2,1fr)}
   .charts-row{grid-template-columns:1fr}
@@ -251,6 +318,9 @@ window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxValxanthJVoO
     </button>
     <button class="nav-tab" onclick="showPage('performance',this)">
       <i class="ti ti-trophy"></i><span>Hiệu suất</span>
+    </button>
+    <button class="nav-tab" onclick="showPage('smc',this)">
+      <i class="ti ti-diamond"></i><span>SMC</span>
     </button>
   </div>
   <div class="nav-actions">
@@ -403,6 +473,72 @@ window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxValxanthJVoO
   </p>
 </div>
 
+<!-- PAGE: SMC CHECKLIST -->
+<div class="page" id="page-smc">
+  <div class="smc-wrap">
+    <div class="smc-toolbar">
+      <h2>🔷 SMC Checklist</h2>
+      <button class="smc-btn smc-btn-primary" onclick="smcAddRow()"><i class="ti ti-plus"></i> Thêm cặp</button>
+      <button class="smc-btn" onclick="smcAddToday()"><i class="ti ti-calendar-plus"></i> Hôm nay</button>
+      <button class="smc-btn smc-btn-danger" onclick="smcConfirmClear()"><i class="ti ti-trash"></i> Xoá tất cả</button>
+    </div>
+    <div class="smc-tbl-wrap">
+      <table class="smc-tbl">
+        <thead>
+          <tr>
+            <th class="smc-s1" rowspan="2" style="min-width:38px">#</th>
+            <th class="smc-s2" rowspan="2" style="min-width:100px;text-align:left">Cặp / Ngày</th>
+            <th class="smc-gh-htf" colspan="3">📐 HTF Structure (W/D/H4)</th>
+            <th class="smc-gh-ltf" colspan="3">🔍 LTF Structure (H1/M15)</th>
+            <th class="smc-gh-ob" colspan="3">🟠 Order Block</th>
+            <th class="smc-gh-fvg" colspan="2">🔵 Fair Value Gap</th>
+            <th class="smc-gh-liq" colspan="3">🟣 Liquidity</th>
+            <th class="smc-gh-res" colspan="2">🎯 Kết quả</th>
+            <th rowspan="2" style="min-width:34px"></th>
+          </tr>
+          <tr>
+            <th class="smc-gh-htf" style="min-width:120px">Xu thế HTF</th>
+            <th class="smc-gh-htf" style="min-width:120px">BOS / CHoCH</th>
+            <th class="smc-gh-htf" style="min-width:100px">⚙ Bias</th>
+            <th class="smc-gh-ltf" style="min-width:120px">Market Structure</th>
+            <th class="smc-gh-ltf" style="min-width:120px">BOS / CHoCH LTF</th>
+            <th class="smc-gh-ltf" style="min-width:110px">⚙ Đồng thuận</th>
+            <th class="smc-gh-ob" style="min-width:110px">OB xác định</th>
+            <th class="smc-gh-ob" style="min-width:110px">Giá tiếp cận OB</th>
+            <th class="smc-gh-ob" style="min-width:110px">⚙ OB hợp lệ</th>
+            <th class="smc-gh-fvg" style="min-width:110px">FVG hiện diện</th>
+            <th class="smc-gh-fvg" style="min-width:110px">FVG chưa fill</th>
+            <th class="smc-gh-liq" style="min-width:110px">Liquidity target</th>
+            <th class="smc-gh-liq" style="min-width:110px">Sweep xảy ra</th>
+            <th class="smc-gh-liq" style="min-width:110px">⚙ LIQ hợp lệ</th>
+            <th class="smc-gh-res" style="min-width:120px">⚙ Kết luận</th>
+            <th class="smc-gh-res" style="min-width:240px">⚙ Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="smc-tbody"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:var(--smc-text3);margin-top:10px"><i class="ti ti-info-circle" style="vertical-align:middle;margin-right:3px"></i>Cột ⚙ tự động tính. Bấm <strong style="color:var(--smc-text2)">Lưu</strong> để đồng bộ lên Google Sheets.</p>
+    <!-- SMC DASHBOARD -->
+    <div style="margin-top:1.5rem">
+      <div class="smc-toolbar"><h2>📊 Tổng quan SMC</h2></div>
+      <div id="smc-db-content"><div class="smc-empty">Nhập dữ liệu ở bảng trên để xem tổng quan</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL XÁC NHẬN XOÁ SMC -->
+<div class="modal-bg" id="modal-clear-smc">
+  <div class="modal">
+    <h3>Xoá toàn bộ SMC checklist?</h3>
+    <p>Thao tác này sẽ xoá tất cả và <b>ghi đè lên Google Sheets</b>.</p>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('modal-clear-smc')">Huỷ</button>
+      <button class="btn btn-danger" onclick="smcClearAll()"><i class="ti ti-trash"></i> Xoá</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE: HIỆU SUẤT -->
 <div class="page" id="page-performance">
   <div class="cl-toolbar">
@@ -543,36 +679,27 @@ async function syncFromSheet() {
     // Nếu Sheets có NHIỀU dòng hơn local → dùng Sheets (thiết bị khác đã thêm)
     // Nếu local có NHIỀU dòng hơn hoặc BẰNG → giữ local (đang làm dở)
     // Nếu Sheets RỖNG → tuyệt đối không ghi đè local
-    let clUpdated = false, jnUpdated = false;
+    let clUpdated = false, jnUpdated = false, smcUpdated = false;
 
     if (clData && clData.length > 0) {
       const localCount = rows.length;
       const sheetsCount = clData.length;
-
       if (sheetsCount > localCount) {
-        // Sheets nhiều hơn → có thể thiết bị khác đã thêm dữ liệu
         rows = dedupeIds(clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
         localStorage.setItem(LS_CL, JSON.stringify(rows));
         clUpdated = true;
       } else if (sheetsCount === localCount) {
-        // Bằng nhau → Sheets có thể mới hơn (chỉnh sửa), merge theo id
         const sheetsMap = {};
         clData.forEach(r => { sheetsMap[r.id] = r; });
-        rows = rows.map(r => {
-          const s = sheetsMap[r.id];
-          // Nếu Sheets có dữ liệu cho row này và khác local → ưu tiên Sheets
-          return s ? { ...s, id: parseFloat(s.id) || r.id } : r;
-        });
+        rows = rows.map(r => { const s = sheetsMap[r.id]; return s ? { ...s, id: parseFloat(s.id) || r.id, date: normalizeDate(s.date) } : r; });
         localStorage.setItem(LS_CL, JSON.stringify(rows));
         clUpdated = true;
       }
-      // Nếu local nhiều hơn Sheets → GIỮ LOCAL, không ghi đè
     }
 
     if (jnData && jnData.length > 0) {
       const localJCount = jRows.length;
       const sheetsJCount = jnData.length;
-
       if (sheetsJCount > localJCount) {
         jRows = dedupeIds(jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) })));
         localStorage.setItem(LS_JN, JSON.stringify(jRows));
@@ -580,27 +707,31 @@ async function syncFromSheet() {
       } else if (sheetsJCount === localJCount) {
         const sheetsJMap = {};
         jnData.forEach(r => { sheetsJMap[r.id] = r; });
-        jRows = jRows.map(r => {
-          const s = sheetsJMap[r.id];
-          return s ? { ...s, id: parseFloat(s.id) || r.id } : r;
-        });
+        jRows = jRows.map(r => { const s = sheetsJMap[r.id]; return s ? { ...s, id: parseFloat(s.id) || r.id, date: normalizeDate(s.date) } : r; });
         localStorage.setItem(LS_JN, JSON.stringify(jRows));
         jnUpdated = true;
+      }
+    }
+
+    // SMC sync
+    const smcData = await apiGet('smc');
+    if (smcData && smcData.length > 0) {
+      if (smcData.length >= smcRows.length) {
+        smcRows = dedupeIds(smcData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
+        localStorage.setItem(LS_SMC, JSON.stringify(smcRows));
+        smcUpdated = true;
       }
     }
 
     renderAll();
     renderJournal();
     renderPerformance();
+    renderSMC();
 
-    // Thông báo kết quả chi tiết
     const clMsg = clData && clData.length > 0
-      ? (clData.length > rows.length
-          ? `✅ Checklist: cập nhật từ Sheets (${clData.length} dòng)`
-          : `✅ Checklist: giữ local (${rows.length} dòng, nhiều hơn hoặc bằng Sheets)`)
+      ? (clData.length > rows.length ? `✅ Checklist: cập nhật từ Sheets (${clData.length} dòng)` : `✅ Checklist: giữ local (${rows.length} dòng)`)
       : `⚠️ Checklist: Sheets rỗng → giữ local (${rows.length} dòng)`;
-
-    showSyncBar('ok', `${clMsg} | Nhật ký: ${jRows.length} lệnh`);
+    showSyncBar('ok', `${clMsg} | Nhật ký: ${jRows.length} lệnh | SMC: ${smcRows.length} dòng`);
 
   } catch(e) {
     showSyncBar('err', '❌ Lỗi đồng bộ: ' + e.message + ' — Đang dùng dữ liệu cục bộ.');
@@ -628,7 +759,8 @@ async function saveAll() {
   try {
     await Promise.all([
       apiSave('checklist', rows),
-      apiSave('journal', jRows)
+      apiSave('journal', jRows),
+      apiSave('smc', smcRows)
     ]);
     showSyncBar('ok', `✅ Đã lưu: ${rows.length} checklist + ${jRows.length} nhật ký lên Sheets`);
     btn.classList.add('save-flash');
@@ -655,7 +787,7 @@ async function forceSyncFromSheet() {
 
   showSyncBar('syncing', '⏳ Đang kéo dữ liệu từ Google Sheets...');
   try {
-    const [clData, jnData] = await Promise.all([apiGet('checklist'), apiGet('journal')]);
+    const [clData, jnData, smcData] = await Promise.all([apiGet('checklist'), apiGet('journal'), apiGet('smc')]);
     if (clData && clData.length > 0) {
       rows = dedupeIds(clData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
       localStorage.setItem(LS_CL, JSON.stringify(rows));
@@ -664,10 +796,15 @@ async function forceSyncFromSheet() {
       jRows = dedupeIds(jnData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now(), date: normalizeDate(r.date) })));
       localStorage.setItem(LS_JN, JSON.stringify(jRows));
     }
+    if (smcData && smcData.length > 0) {
+      smcRows = dedupeIds(smcData.map(r => ({ ...r, id: parseFloat(r.id) || Date.now() + Math.random(), date: normalizeDate(r.date) })));
+      localStorage.setItem(LS_SMC, JSON.stringify(smcRows));
+    }
     renderAll();
     renderJournal();
     renderPerformance();
-    showSyncBar('ok', `✅ Đã kéo từ Sheets: ${rows.length} checklist, ${jRows.length} nhật ký`);
+    renderSMC();
+    showSyncBar('ok', `✅ Đã kéo từ Sheets: ${rows.length} checklist, ${jRows.length} nhật ký, ${smcRows.length} SMC`);
   } catch(e) {
     showSyncBar('err', '❌ Lỗi: ' + e.message);
   }
@@ -684,19 +821,20 @@ function resetSaveBtn() {
 let _autoSyncTimer = null;
 function scheduleAutoSyncToSheets() {
   const url = getUrl();
-  if (!url) return; // chưa kết nối Sheets thì chỉ lưu local
+  if (!url) return;
   if (_autoSyncTimer) clearTimeout(_autoSyncTimer);
   _autoSyncTimer = setTimeout(async () => {
     try {
       await Promise.all([
         apiSave('checklist', rows),
-        apiSave('journal', jRows)
+        apiSave('journal', jRows),
+        apiSave('smc', smcRows)
       ]);
       showSyncBar('ok', `☁️ Tự động lưu lên Sheets lúc ${new Date().toLocaleTimeString('vi-VN')}`);
     } catch(e) {
       showSyncBar('err', '⚠️ Tự động lưu Sheets lỗi: ' + e.message + ' — dữ liệu vẫn an toàn ở local.');
     }
-  }, 3000); // chờ 3 giây sau lần sửa cuối mới gửi, tránh spam request
+  }, 3000);
 }
 
 function autoSave() {
@@ -765,23 +903,22 @@ function normalizeDate(val) {
 
 
 function init() {
-  // Load checklist từ localStorage (KHÔNG auto-sync từ Sheets khi mở)
+  // Load từ localStorage (KHÔNG auto-sync từ Sheets khi mở)
   try { rows = JSON.parse(localStorage.getItem(LS_CL) || '[]'); } catch(e) { rows = []; }
-  // Load journal
   try { jRows = JSON.parse(localStorage.getItem(LS_JN) || '[]'); } catch(e) { jRows = []; }
+  try { smcRows = JSON.parse(localStorage.getItem(LS_SMC) || '[]'); } catch(e) { smcRows = []; }
 
   if (rows.length === 0) addTodayRows(true);
   else renderAll();
   renderJournal();
   renderPerformance();
+  renderSMC();
 
-  // Kiểm tra kết nối nhưng KHÔNG tự động ghi đè dữ liệu
   const url = getUrl();
   if (!url) {
     showSyncBar('local', '⚡ Chế độ offline. Bấm ⚙️ để kết nối Google Sheets và dùng trên mọi thiết bị.');
   } else {
-    // Chỉ báo đã kết nối, KHÔNG kéo dữ liệu tự động
-    showSyncBar('ok', `✅ Đã kết nối Google Sheets. Bấm 🔄 Đồng bộ để tải dữ liệu mới nhất từ Sheets.`);
+    showSyncBar('ok', `✅ Đã kết nối Google Sheets. Bấm 🔄 Đồng bộ để tải dữ liệu mới nhất.`);
   }
 }
 
@@ -1084,6 +1221,7 @@ function showPage(id, btn) {
   if(id==='dashboard') renderDashboard();
   if(id==='journal') renderJournal();
   if(id==='performance') renderPerformance();
+  if(id==='smc') renderSMC();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1513,8 +1651,229 @@ function resetFetchBtn() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// START
+// SMC CHECKLIST MODULE
 // ═══════════════════════════════════════════════════════════════
+const LS_SMC = 'forex2ema_smc';
+let smcRows = [];
+let smcBarI = null, smcDoI = null;
+
+const SMC_OPT = {
+  htfTrend: ['📈 Uptrend','📉 Downtrend','↔️ Ranging'],
+  bos:      ['✅ BOS Bullish','✅ BOS Bearish','⚠️ CHoCH Bullish','⚠️ CHoCH Bearish','❌ Không rõ'],
+  ms:       ['📈 HH-HL (Tăng)','📉 LH-LL (Giảm)','↔️ Ranging/Flat'],
+  ob:       ['✅ Bullish OB','✅ Bearish OB','❌ Không tìm thấy'],
+  approach: ['✅ Đang tiếp cận','⏳ Cách xa','❌ Đã vượt qua'],
+  fvg:      ['✅ Có FVG','❌ Không có'],
+  fvgFill:  ['✅ Chưa fill','❌ Đã fill một phần','❌ Đã fill hoàn toàn'],
+  liq:      ['✅ Equal Highs (BSL)','✅ Equal Lows (SSL)','✅ Swing High/Low','❌ Không rõ'],
+  sweep:    ['✅ Đã sweep','⏳ Chưa sweep','❌ Không có'],
+};
+
+function smcNewRow(dt) {
+  return { id:generateUniqueId(), date:dt||todayStr(), pair:'',
+    htfTrend:'', bosHTF:'', ltfMS:'', bosLTF:'',
+    ob:'', approach:'', fvg:'', fvgFill:'', liq:'', sweep:'' };
+}
+
+function smcAutoSave() {
+  localStorage.setItem(LS_SMC, JSON.stringify(smcRows));
+  scheduleAutoSyncToSheets();
+}
+
+function smcAddRow() { smcRows.push(smcNewRow()); renderSMC(); smcAutoSave(); }
+
+function smcAddToday() {
+  const t = todayStr();
+  ['EURUSD','GBPUSD','USDJPY','XAUUSD'].forEach(p => {
+    const r = smcNewRow(t); r.pair = p; smcRows.push(r);
+  });
+  renderSMC(); smcAutoSave();
+}
+
+function smcDelRow(id) { smcRows = smcRows.filter(r => r.id !== id); renderSMC(); smcAutoSave(); }
+function smcConfirmClear() { document.getElementById('modal-clear-smc').classList.add('open'); }
+function smcClearAll() { smcRows = []; smcAutoSave(); renderSMC(); closeModal('modal-clear-smc'); }
+
+function smcUpd(id, f, v) {
+  const r = smcRows.find(r => r.id === id);
+  if (r) { r[f] = v; smcUpdAuto(id); smcAutoSave(); }
+}
+
+// ── SMC COMPUTE ────────────────────────────────────────────────
+function smcCompute(r) {
+  let bias = '–', biasClass = 'smc-neut';
+  if (r.htfTrend==='📈 Uptrend' && r.bosHTF && r.bosHTF.includes('Bullish'))       { bias='⬆️ BULLISH'; biasClass='smc-bull'; }
+  else if (r.htfTrend==='📉 Downtrend' && r.bosHTF && r.bosHTF.includes('Bearish')) { bias='⬇️ BEARISH'; biasClass='smc-bear'; }
+  else if (r.bosHTF && r.bosHTF.includes('CHoCH'))                                   { bias='⚠️ CHỜ XÁC NHẬN'; biasClass='smc-wait'; }
+  else if (r.htfTrend || r.bosHTF)                                                   { bias='↔️ CHƯA RÕ'; biasClass='smc-neut'; }
+
+  let align = '–', alignClass = 'smc-neut';
+  if (bias.includes('BULLISH')) {
+    if (r.ltfMS==='📈 HH-HL (Tăng)')       { align='✅ Đồng thuận TĂNG'; alignClass='smc-bull'; }
+    else if (r.ltfMS==='📉 LH-LL (Giảm)') { align='❌ Ngược chiều'; alignClass='smc-bear'; }
+    else if (r.ltfMS)                       { align='⚠️ LTF chưa rõ'; alignClass='smc-wait'; }
+  } else if (bias.includes('BEARISH')) {
+    if (r.ltfMS==='📉 LH-LL (Giảm)')       { align='✅ Đồng thuận GIẢM'; alignClass='smc-bear'; }
+    else if (r.ltfMS==='📈 HH-HL (Tăng)') { align='❌ Ngược chiều'; alignClass='smc-bull'; }
+    else if (r.ltfMS)                       { align='⚠️ LTF chưa rõ'; alignClass='smc-wait'; }
+  }
+
+  let obOk = '–', obClass = 'smc-neut';
+  const obAlign = (bias.includes('BULLISH') && r.ob==='✅ Bullish OB') || (bias.includes('BEARISH') && r.ob==='✅ Bearish OB');
+  if (r.ob==='❌ Không tìm thấy')                                 { obOk='❌ Không có OB'; obClass='smc-bear'; }
+  else if (r.ob && !obAlign)                                      { obOk='❌ OB ngược chiều'; obClass='smc-bear'; }
+  else if (r.ob && obAlign && r.approach==='✅ Đang tiếp cận')   { obOk='✅ OB hợp lệ'; obClass='smc-bull'; }
+  else if (r.ob && obAlign && r.approach==='⏳ Cách xa')         { obOk='⏳ Chờ giá tiếp cận'; obClass='smc-wait'; }
+  else if (r.ob && obAlign && r.approach==='❌ Đã vượt qua')     { obOk='❌ OB bị vượt'; obClass='smc-bear'; }
+  else if (r.ob)                                                   { obOk='⏳ Đánh giá thêm'; obClass='smc-wait'; }
+
+  let liqOk = '–', liqClass = 'smc-neut';
+  if (r.liq==='❌ Không rõ')            { liqOk='❌ Không xác định'; liqClass='smc-bear'; }
+  else if (r.liq && r.sweep==='✅ Đã sweep')    { liqOk='✅ Sweep xong'; liqClass='smc-bull'; }
+  else if (r.liq && r.sweep==='⏳ Chưa sweep') { liqOk='⏳ Chờ sweep'; liqClass='smc-wait'; }
+  else if (r.liq)                               { liqOk='⏳ Theo dõi'; liqClass='smc-wait'; }
+
+  const alignOk  = align.includes('Đồng thuận');
+  const obReady  = obOk === '✅ OB hợp lệ';
+  const liqReady = liqOk === '✅ Sweep xong';
+  const fvgOk    = r.fvg==='✅ Có FVG' && r.fvgFill==='✅ Chưa fill';
+
+  let ket = '–', ketClass = 'smc-neut';
+  if (!r.htfTrend)                                                   { ket='─ Chưa nhập'; ketClass='smc-neut'; }
+  else if (align==='❌ Ngược chiều' || obOk.includes('ngược'))      { ket='❌ ĐỨNG NGOÀI'; ketClass='smc-bear'; }
+  else if (alignOk && obReady && liqReady)                           { ket='✅ VÀO LỆNH'; ketClass='smc-bull'; }
+  else if (alignOk && obReady && !liqReady)                          { ket='⏳ CHỜ SWEEP'; ketClass='smc-wait'; }
+  else if (alignOk && !obReady)                                      { ket='⏳ CHỜ OB / GIÁ'; ketClass='smc-wait'; }
+  else if (bias.includes('BULLISH') || bias.includes('BEARISH'))     { ket='⏳ CHỜ LTF'; ketClass='smc-wait'; }
+  else                                                               { ket='⚠️ CHƯA ĐỦ'; ketClass='smc-neut'; }
+
+  let adv = '';
+  const dir = bias.includes('BULLISH') ? 'BUY' : 'SELL';
+  if (ket==='✅ VÀO LỆNH')      adv = `✅ ĐỦ ĐIỀU KIỆN ${dir}. OB hợp lệ ✓ Liquidity sweep ✓ LTF đồng thuận ✓${fvgOk?' FVG hỗ trợ ✓':' (Không có FVG – cần xác nhận PA thêm)'}. SL đặt dưới/trên OB. TP nhắm liquidity kế tiếp.`;
+  else if (ket==='⏳ CHỜ SWEEP') adv = `⏳ Còn thiếu: Liquidity sweep (${r.liq||'chưa xác định'}). Chờ sweep trước khi vào.`;
+  else if (ket==='⏳ CHỜ OB / GIÁ') adv = `⏳ ${obOk}. ${r.approach!=='✅ Đang tiếp cận'?'Chờ giá hồi về vùng OB.':'Cần OB hợp lệ theo chiều trend.'}`;
+  else if (ket==='⏳ CHỜ LTF')   adv = `⏳ HTF Bias rõ (${bias}). Chờ LTF xác nhận BOS/CHoCH cùng chiều.`;
+  else if (ket==='❌ ĐỨNG NGOÀI') adv = `❌ LTF đi ngược HTF hoặc OB ngược chiều. Chờ thị trường reset cấu trúc.`;
+  else adv = 'Nhập đầy đủ để nhận đánh giá SMC.';
+
+  return { bias, biasClass, align, alignClass, obOk, obClass, liqOk, liqClass, ket, ketClass, adv, fvgOk };
+}
+
+// ── SMC RENDER ─────────────────────────────────────────────────
+function smcSopt(opts, v) {
+  return `<option value="">– chọn –</option>` + opts.map(o => `<option value="${o}"${v===o?' selected':''}>${o}</option>`).join('');
+}
+
+function renderSMC() {
+  const tb = document.getElementById('smc-tbody');
+  if (!tb) return;
+  tb.innerHTML = smcRows.map((r, i) => {
+    const c = smcCompute(r);
+    return `<tr>
+<td class="smc-rn smc-s1">${i+1}</td>
+<td class="smc-s2" style="padding:0">
+  <div style="display:flex;flex-direction:column;gap:0">
+    <input type="date" class="smc-ci" style="border-bottom:0.5px solid var(--smc-border)" value="${r.date}" onchange="smcUpd(${r.id},'date',this.value)">
+    <input class="smc-ci" style="font-weight:600;text-transform:uppercase" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="smcUpd(${r.id},'pair',this.value.toUpperCase())">
+  </div>
+</td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'htfTrend',this.value)">${smcSopt(SMC_OPT.htfTrend,r.htfTrend)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'bosHTF',this.value)">${smcSopt(SMC_OPT.bos,r.bosHTF)}</select></td>
+<td id="smcbias-${r.id}" class="smc-ac ${c.biasClass}">${c.bias}</td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'ltfMS',this.value)">${smcSopt(SMC_OPT.ms,r.ltfMS)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'bosLTF',this.value)">${smcSopt(SMC_OPT.bos,r.bosLTF)}</select></td>
+<td id="smcalign-${r.id}" class="smc-ac ${c.alignClass}">${c.align}</td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'ob',this.value)">${smcSopt(SMC_OPT.ob,r.ob)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'approach',this.value)">${smcSopt(SMC_OPT.approach,r.approach)}</select></td>
+<td id="smcob-${r.id}" class="smc-ac ${c.obClass}">${c.obOk}</td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'fvg',this.value)">${smcSopt(SMC_OPT.fvg,r.fvg)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'fvgFill',this.value)">${smcSopt(SMC_OPT.fvgFill,r.fvgFill)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'liq',this.value)">${smcSopt(SMC_OPT.liq,r.liq)}</select></td>
+<td><select class="smc-cs" onchange="smcUpd(${r.id},'sweep',this.value)">${smcSopt(SMC_OPT.sweep,r.sweep)}</select></td>
+<td id="smcliq-${r.id}" class="smc-ac ${c.liqClass}">${c.liqOk}</td>
+<td id="smcket-${r.id}" class="smc-ac ${c.ketClass}">${c.ket}</td>
+<td id="smcadv-${r.id}" class="smc-adv" style="color:${c.ketClass==='smc-bull'?'var(--smc-bull)':c.ketClass==='smc-bear'?'var(--smc-bear)':c.ketClass==='smc-wait'?'var(--smc-gold)':'var(--smc-text2)'}">${c.adv}</td>
+<td><button class="smc-del" onclick="smcDelRow(${r.id})"><i class="ti ti-trash" style="font-size:13px"></i></button></td>
+</tr>`;
+  }).join('') || `<tr><td colspan="20" class="smc-empty"><i class="ti ti-diamond" style="font-size:28px;display:block;margin-bottom:8px"></i>Chưa có dữ liệu — bấm <strong>Thêm cặp</strong> để bắt đầu</td></tr>`;
+  renderSmcDB();
+}
+
+function smcUpdAuto(id) {
+  const r = smcRows.find(r => r.id === id); if (!r) return;
+  const c = smcCompute(r);
+  const set = (pre, cls, txt) => { const el = document.getElementById(pre+id); if(el){el.className='smc-ac '+cls;el.textContent=txt;} };
+  set('smcbias-', c.biasClass, c.bias);
+  set('smcalign-', c.alignClass, c.align);
+  set('smcob-', c.obClass, c.obOk);
+  set('smcliq-', c.liqClass, c.liqOk);
+  set('smcket-', c.ketClass, c.ket);
+  const adv = document.getElementById('smcadv-'+id);
+  if (adv) {
+    adv.textContent = c.adv;
+    adv.style.color = c.ketClass==='smc-bull'?'var(--smc-bull)':c.ketClass==='smc-bear'?'var(--smc-bear)':c.ketClass==='smc-wait'?'var(--smc-gold)':'var(--smc-text2)';
+  }
+  renderSmcDB();
+}
+
+// ── SMC DASHBOARD ──────────────────────────────────────────────
+function renderSmcDB() {
+  const all = smcRows.map(r => ({...r, ...smcCompute(r)})).filter(r => r.pair && r.date);
+  const dc = document.getElementById('smc-db-content');
+  if (!dc) return;
+  if (!all.length) { dc.innerHTML = '<div class="smc-empty">Nhập dữ liệu ở bảng trên để xem tổng quan</div>'; return; }
+
+  const vao  = all.filter(r => r.ket==='✅ VÀO LỆNH');
+  const cho  = all.filter(r => r.ket.includes('CHỜ'));
+  const ng   = all.filter(r => r.ket==='❌ ĐỨNG NGOÀI');
+  const bull = all.filter(r => r.bias.includes('BULLISH'));
+  const bear = all.filter(r => r.bias.includes('BEARISH'));
+  const tot  = all.length;
+
+  dc.innerHTML = `
+<div class="smc-dash-grid">
+  <div class="smc-dash-card"><div class="smc-dc-label">Tổng cặp</div><div class="smc-dc-val" style="color:var(--smc-blue)">${tot}</div></div>
+  <div class="smc-dash-card"><div class="smc-dc-label">Vào lệnh</div><div class="smc-dc-val" style="color:var(--smc-bull)">${vao.length}</div></div>
+  <div class="smc-dash-card"><div class="smc-dc-label">Chờ tín hiệu</div><div class="smc-dc-val" style="color:var(--smc-gold)">${cho.length}</div></div>
+  <div class="smc-dash-card"><div class="smc-dc-label">Đứng ngoài</div><div class="smc-dc-val" style="color:var(--smc-bear)">${ng.length}</div></div>
+</div>
+<div class="smc-charts-row">
+  <div class="smc-chart-card">
+    <h3>Phân bổ kết quả</h3>
+    <div class="smc-leg"><span><span class="smc-ld" style="background:var(--smc-bull)"></span>Vào lệnh</span><span><span class="smc-ld" style="background:var(--smc-gold)"></span>Chờ</span><span><span class="smc-ld" style="background:var(--smc-bear)"></span>Đứng ngoài</span></div>
+    <div style="position:relative;height:200px"><canvas id="smc-do-chart"></canvas></div>
+  </div>
+  <div class="smc-chart-card">
+    <h3>SMC Bias phân bổ</h3>
+    <div class="smc-leg"><span><span class="smc-ld" style="background:var(--smc-bull)"></span>Bullish ${bull.length}</span><span><span class="smc-ld" style="background:var(--smc-bear)"></span>Bearish ${bear.length}</span></div>
+    <div style="position:relative;height:200px"><canvas id="smc-bar-chart"></canvas></div>
+  </div>
+</div>
+<div class="smc-chart-card">
+  <h3>Chi tiết các cặp</h3>
+  <table class="smc-sum-tbl"><thead><tr><th>Cặp</th><th>Ngày</th><th>HTF Bias</th><th>LTF Đồng thuận</th><th>OB</th><th>Liquidity</th><th>Kết luận</th></tr></thead>
+  <tbody>${all.map(r=>`<tr>
+    <td style="font-weight:700;color:var(--smc-text)">${r.pair}</td>
+    <td style="color:var(--smc-text3)">${r.date}</td>
+    <td><span class="smc-badge ${r.biasClass==='smc-bull'?'smc-bv':r.biasClass==='smc-bear'?'smc-bb':r.biasClass==='smc-wait'?'smc-bn':'smc-bx'}">${r.bias}</span></td>
+    <td style="font-size:11px;color:var(--smc-text2)">${r.align}</td>
+    <td style="font-size:11px;color:var(--smc-text2)">${r.obOk}</td>
+    <td style="font-size:11px;color:var(--smc-text2)">${r.liqOk}</td>
+    <td><span class="smc-badge ${r.ketClass==='smc-bull'?'smc-bv':r.ketClass==='smc-bear'?'smc-bb':r.ketClass==='smc-wait'?'smc-bn':'smc-bx'}">${r.ket}</span></td>
+  </tr>`).join('')}</tbody></table>
+</div>`;
+
+  setTimeout(() => {
+    if (smcDoI) { smcDoI.destroy(); smcDoI = null; }
+    if (smcBarI) { smcBarI.destroy(); smcBarI = null; }
+    const dc2 = document.getElementById('smc-do-chart');
+    const bc  = document.getElementById('smc-bar-chart');
+    if (dc2) smcDoI = new Chart(dc2, {type:'doughnut',data:{labels:['Vào lệnh','Chờ','Đứng ngoài'],datasets:[{data:[vao.length,cho.length,ng.length],backgroundColor:['#22c55e','#f59e0b','#ef4444'],borderWidth:2,borderColor:'transparent',hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}});
+    if (bc)  smcBarI = new Chart(bc,  {type:'bar',data:{labels:['Bullish','Bearish','Chưa rõ'],datasets:[{data:[bull.length,bear.length,tot-bull.length-bear.length],backgroundColor:['#22c55e','#ef4444','#4a5268'],borderRadius:5,barThickness:36}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8a94a8',font:{size:11}}},y:{beginAtZero:true,ticks:{stepSize:1,color:'#8a94a8',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}}}});
+  }, 50);
+}
+
+
 // CSS spin animation
 const style=document.createElement('style');
 style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
