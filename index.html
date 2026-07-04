@@ -659,9 +659,17 @@ async function apiSave(sheet, data) {
     headers: { 'Content-Type': 'text/plain' }, // avoid CORS preflight
     body: JSON.stringify({ action: 'save', sheet, rows: data })
   });
-  const result = await resp.json();
-  if (!result.ok) throw new Error(result.error || 'Save error');
-  return true;
+  const text = await resp.text();
+  // Apps Script có thể trả về JSON hoặc text thuần "ok"
+  try {
+    const result = JSON.parse(text);
+    if (!result.ok) throw new Error(result.error || 'Save error');
+    return true;
+  } catch(e) {
+    // Nếu text là "ok" hoặc chứa "ok" → thành công
+    if (text && text.trim().toLowerCase().includes('ok')) return true;
+    throw new Error('Invalid response: ' + text.substring(0, 100));
+  }
 }
 
 // Đồng bộ từ Sheets → local (thông minh: không ghi đè nếu local mới hơn)
