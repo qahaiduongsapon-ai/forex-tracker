@@ -295,7 +295,7 @@ table.rt tr:hover td{background:var(--surface2)}
      APPS SCRIPT URL – Thay URL dưới đây sau khi deploy
      ============================================================ -->
 <script>
-window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-UC_NWCWdnZNOO2TLlwHYaFmRfyJnyZvWmVSS1uVJS52cDNFY1kd7TvodGlqihLb0/exec";
+window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8VFiO2uP2DgwyDRB3QuR-b3D4LMqcJmB6f9GPpqHhch4iCEYkzSsmxPa1oUk8VEU/exec";
 // Nếu chưa có URL, ứng dụng vẫn chạy và lưu offline (localStorage)
 // Sau khi có URL → bấm ⚙️ Cài đặt để cập nhật
 </script>
@@ -410,6 +410,7 @@ window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw-UC_NWCWdnZN
           <th class="grp-entry" style="min-width:116px">Tin tức lớn?</th>
           <th class="grp-result" style="min-width:120px">⚙️ Kết luận</th>
           <th class="grp-result" style="min-width:280px">⚙️ Lời khuyên</th>
+          <th rowspan="2" style="min-width:180px;text-align:left;background:var(--surface2)">📝 Ghi chú</th>
         </tr>
       </thead>
       <tbody id="cl-body"></tbody>
@@ -948,7 +949,7 @@ function generateUniqueId() {
 
 function newRow(dateVal) {
   return { id: generateUniqueId(), date: dateVal || todayStr(),
-           pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'' };
+           pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'', note:'' };
 }
 
 function addRow() { rows.push(newRow()); renderAll(); autoSave(); }
@@ -1087,9 +1088,17 @@ function renderAll() {
       <td><select class="cl-select" onchange="updateRow(${r.id},'news',this.value)"><option value="">– chọn –</option>${selOpts(OPT.news,r.news)}</select></td>
       <td class="auto-cell ${autoClass(c.ket)}">${c.ket}</td>
       <td class="auto-advice ${advClass}" onmouseenter="showTip(event,'${c.advice.replace(/'/g,'&#39;')}')" onmouseleave="hideTip()">${c.advice}</td>
+      <td style="padding:0"><textarea class="cl-input" style="resize:none;min-height:36px;height:36px;width:100%;font-size:12px;padding:6px 8px;line-height:1.4;border:none;background:transparent;color:var(--text);font-family:inherit;outline:none;overflow:hidden" placeholder="Ghi chú..." oninput="updateRow(${r.id},'note',this.value);this.style.height='36px';this.style.height=this.scrollHeight+'px'">${r.note||''}</textarea></td>
       <td><button class="del-btn" onclick="deleteRow(${r.id})" title="Xoá"><i class="ti ti-trash" style="font-size:13px"></i></button></td>
     </tr>`;
-  }).join('') || `<tr><td colspan="17" style="text-align:center;padding:2rem;color:var(--text3)">Chưa có dữ liệu. Bấm <strong>+ Thêm cặp</strong> để bắt đầu.</td></tr>`;
+  }).join('') || `<tr><td colspan="18" style="text-align:center;padding:2rem;color:var(--text3)">Chưa có dữ liệu. Bấm <strong>+ Thêm cặp</strong> để bắt đầu.</td></tr>`;
+  // Auto-resize tất cả textarea ghi chú sau khi render
+  setTimeout(() => {
+    document.querySelectorAll('#cl-body textarea').forEach(ta => {
+      ta.style.height = '36px';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
+  }, 0);
   renderDashboard();
 }
 
