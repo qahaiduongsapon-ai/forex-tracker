@@ -660,20 +660,40 @@ async function apiGet(sheet) {
 async function apiSave(sheet, data) {
   const url = getUrl();
   if (!url) return false;
-  const resp = await fetch(url, {
+
+  // Bước 1: Gửi POST, không follow redirect để lấy URL redirect thực sự
+  let finalUrl = url;
+  try {
+    const probe = await fetch(url, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'save', sheet, rows: data })
+    });
+    // Nếu bị redirect (302/301) → lấy URL đích rồi POST lại thẳng vào đó
+    if (probe.type === 'opaqueredirect' || probe.status === 302 || probe.status === 301) {
+      const loc = probe.headers.get('Location');
+      if (loc) finalUrl = loc;
+    } else {
+      // Không redirect → đọc kết quả luôn
+      const text = await probe.text();
+      if (text && (text.includes('"ok":true') || text.trim() === 'ok')) return true;
+    }
+  } catch(e) { /* bỏ qua lỗi probe */ }
+
+  // Bước 2: POST thẳng vào URL cuối (không redirect nữa)
+  const resp = await fetch(finalUrl, {
     method: 'POST',
     redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain' }, // avoid CORS preflight
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({ action: 'save', sheet, rows: data })
   });
   const text = await resp.text();
-  // Apps Script có thể trả về JSON hoặc text thuần "ok"
   try {
     const result = JSON.parse(text);
     if (!result.ok) throw new Error(result.error || 'Save error');
     return true;
   } catch(e) {
-    // Nếu text là "ok" hoặc chứa "ok" → thành công
     if (text && text.trim().toLowerCase().includes('ok')) return true;
     throw new Error('Invalid response: ' + text.substring(0, 100));
   }
