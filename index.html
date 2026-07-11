@@ -121,7 +121,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .auto-dong{color:var(--green);background:var(--green-bg)}
 .auto-nguoc{color:var(--red);background:var(--red-bg)}
 .auto-kep{color:var(--amber);background:var(--amber-bg)}
-.auto-advice{padding:8px 10px;font-size:11px;color:var(--text2);min-width:260px;max-width:340px;white-space:normal;word-break:break-word;line-height:1.55;cursor:default}
+.auto-advice{padding:8px 10px;font-size:11px;color:var(--text2);min-width:120px;max-width:120px;white-space:normal;word-break:break-word;line-height:1.55;cursor:default}
 .auto-advice.a-vao{color:var(--green)}
 .auto-advice.a-cho{color:var(--amber)}
 .auto-advice.a-ngoai{color:var(--red)}
@@ -395,28 +395,28 @@ window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8VFiO2uP2Dgw
         <tr>
           <th class="left sc1" rowspan="2" style="min-width:32px">#</th>
           <th class="left sc2" rowspan="2" style="min-width:100px">Ngày</th>
-          <th class="left sc3" rowspan="2" style="min-width:80px">Cặp tiền</th>
-          <th colspan="2" class="grp-h4">Khung H4</th>
-          <th colspan="2" class="grp-h1">Khung H1</th>
-          <th colspan="2" class="grp-m15">Khung M15</th>
-          <th colspan="4" class="grp-entry">Điểm vào lệnh</th>
+          <th class="left sc3" rowspan="2" style="min-width:60px">Cặp tiền</th>
+          <th colspan="1" class="grp-h4">Khung H4</th>
+          <th colspan="1" class="grp-h1">Khung H1</th>
+          <th colspan="1" class="grp-m15">Khung M15</th>
+          <th colspan="1" class="grp-entry">Điểm vào lệnh</th>
           <th colspan="2" class="grp-result">Kết quả tự động</th>
           <th rowspan="2" style="min-width:32px"></th>
         </tr>
         <tr>
           <th class="grp-h4" style="min-width:110px">Vị trí giá / EMA</th>
-          <th class="grp-h4" style="min-width:100px">⚙️ Xu thế</th>
+          <th class="grp-h4" style="min-width:100px;display:none">⚙️ Xu thế</th>
           <th class="grp-h1" style="min-width:110px">Vị trí giá / EMA</th>
-          <th class="grp-h1" style="min-width:110px">⚙️ Đồng thuận</th>
+          <th class="grp-h1" style="min-width:110px;display:none">⚙️ Đồng thuận</th>
           <th class="grp-m15" style="min-width:110px">Vị trí giá / EMA</th>
-          <th class="grp-m15" style="min-width:110px">⚙️ Đồng thuận</th>
-          <th class="grp-entry" style="min-width:110px">Vùng EMA</th>
-          <th class="grp-entry" style="min-width:110px">Hành vi giá</th>
-          <th class="grp-entry" style="min-width:120px">Phá trend+Dow</th>
-          <th class="grp-entry" style="min-width:90px">Tin tức?</th>
-          <th class="grp-result" style="min-width:110px">⚙️ Kết luận</th>
-          <th class="grp-result" style="min-width:200px">⚙️ Lời khuyên</th>
-          <th rowspan="2" style="min-width:160px;text-align:left;background:var(--surface2)">📝 Ghi chú</th>
+          <th class="grp-m15" style="min-width:110px;display:none">⚙️ Đồng thuận</th>
+          <th class="grp-entry" style="min-width:110px;display:none">Vùng EMA</th>
+          <th class="grp-entry" style="min-width:110px;display:none">Hành vi giá</th>
+          <th class="grp-entry" style="min-width:160px">Phá trend+Dow</th>
+          <th class="grp-entry" style="min-width:90px;display:none">Tin tức?</th>
+          <th class="grp-result" style="min-width:160px">Kết luận</th>
+          <th class="grp-result" style="min-width:120px;white-space:normal;word-break:break-word">⚙️ Lời khuyên</th>
+          <th rowspan="2" style="min-width:240px;text-align:left;background:var(--surface2)">📝 Ghi chú</th>
         </tr>
       </thead>
       <tbody id="cl-body"></tbody>
@@ -919,6 +919,13 @@ function normalizeDate(val) {
 
 
 function init() {
+  // Nếu localStorage lưu URL cũ khác URL mới trong file → xoá đi dùng URL mới
+  const inlineUrl = window.APPS_SCRIPT_URL || '';
+  const storedUrl = localStorage.getItem(LS_URL) || '';
+  if (inlineUrl && storedUrl && storedUrl !== inlineUrl) {
+    localStorage.removeItem(LS_URL);
+    console.log('Cleared old URL from localStorage, using inline URL:', inlineUrl);
+  }
   // Load từ localStorage (KHÔNG auto-sync từ Sheets khi mở)
   try { rows = JSON.parse(localStorage.getItem(LS_CL) || '[]'); } catch(e) { rows = []; }
   try { jRows = JSON.parse(localStorage.getItem(LS_JN) || '[]'); } catch(e) { jRows = []; }
@@ -956,7 +963,7 @@ function generateUniqueId() {
 
 function newRow(dateVal) {
   return { id: generateUniqueId(), date: dateVal || todayStr(),
-           pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'', note:'' };
+           pair:'', h4pos:'', h1pos:'', m15pos:'', zone:'', pa:'', dow:'', news:'', note:'', ket:'' };
 }
 
 function addRow() { rows.push(newRow()); renderAll(); autoSave(); }
@@ -1082,20 +1089,29 @@ function renderAll() {
     return `<tr data-id="${r.id}">
       <td class="row-num sc1">${i+1}</td>
       <td class="sc2"><input type="date" class="cl-input" value="${r.date}" onchange="updateRow(${r.id},'date',this.value)"/></td>
-      <td class="sc3"><input class="cl-input" style="font-weight:600;text-transform:uppercase" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="updateRow(${r.id},'pair',this.value.toUpperCase())"/></td>
+      <td class="sc3"><input class="cl-input" style="font-weight:600;text-transform:uppercase;font-size:11px" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="updateRow(${r.id},'pair',this.value.toUpperCase())"/></td>
       <td><select class="cl-select" onchange="updateRow(${r.id},'h4pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.h4pos)}</select></td>
-      <td class="auto-cell ${autoClass(c.h4trend)}">${c.h4trend}</td>
+      <td class="auto-cell ${autoClass(c.h4trend)}" style="display:none">${c.h4trend}</td>
       <td><select class="cl-select" onchange="updateRow(${r.id},'h1pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.h1pos)}</select></td>
-      <td class="auto-cell ${autoClass(c.h1sync)}">${c.h1sync}</td>
+      <td class="auto-cell ${autoClass(c.h1sync)}" style="display:none">${c.h1sync}</td>
       <td><select class="cl-select" onchange="updateRow(${r.id},'m15pos',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pos,r.m15pos)}</select></td>
-      <td class="auto-cell ${autoClass(c.m15sync)}">${c.m15sync}</td>
-      <td><select class="cl-select" onchange="updateRow(${r.id},'zone',this.value)"><option value="">– chọn –</option>${selOpts(OPT.zone,r.zone)}</select></td>
-      <td><select class="cl-select" onchange="updateRow(${r.id},'pa',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pa,r.pa)}</select></td>
-      <td><select class="cl-select" onchange="updateRow(${r.id},'dow',this.value)"><option value="">– chọn –</option>${selOpts(OPT.dow,r.dow)}</select></td>
-      <td><select class="cl-select" onchange="updateRow(${r.id},'news',this.value)"><option value="">– chọn –</option>${selOpts(OPT.news,r.news)}</select></td>
-      <td class="auto-cell ${autoClass(c.ket)}">${c.ket}</td>
+      <td class="auto-cell ${autoClass(c.m15sync)}" style="display:none">${c.m15sync}</td>
+      <td style="display:none"><select class="cl-select" onchange="updateRow(${r.id},'zone',this.value)"><option value="">– chọn –</option>${selOpts(OPT.zone,r.zone)}</select></td>
+      <td style="display:none"><select class="cl-select" onchange="updateRow(${r.id},'pa',this.value)"><option value="">– chọn –</option>${selOpts(OPT.pa,r.pa)}</select></td>
+      <td style="padding:0;min-width:160px;max-width:200px;vertical-align:top">
+        <div class="note-cell" id="dow-${r.id}">
+          <textarea class="cl-input note-ta" style="resize:none;min-height:34px;height:34px;width:100%;font-size:12px;padding:6px 8px;line-height:1.4;border:none;background:transparent;color:var(--text);font-family:inherit;outline:none;overflow:hidden" placeholder="Phân tích Dow / dán link ảnh..." oninput="updateRow(${r.id},'dow',this.value);autoResizeTA(this);renderDowPreview(${r.id})">${r.dow||''}</textarea>
+          ${renderNoteHTML(r.dow||'')}
+        </div>
+      </td>
+      <td style="display:none"><select class="cl-select" onchange="updateRow(${r.id},'news',this.value)"><option value="">– chọn –</option>${selOpts(OPT.news,r.news)}</select></td>
+      <td style="padding:0;min-width:160px;max-width:200px;vertical-align:top">
+        <div class="note-cell" id="ket-${r.id}">
+          <textarea class="cl-input note-ta" style="resize:none;min-height:34px;height:34px;width:100%;font-size:12px;padding:6px 8px;line-height:1.4;border:none;background:transparent;color:var(--text);font-family:inherit;outline:none;overflow:hidden" placeholder="Kết luận của bạn..." oninput="updateRow(${r.id},'ket',this.value);autoResizeTA(this)">${r.ket||''}</textarea>
+        </div>
+      </td>
       <td class="auto-advice ${advClass}" onmouseenter="showTip(event,'${c.advice.replace(/'/g,'&#39;')}')" onmouseleave="hideTip()">${c.advice}</td>
-      <td style="padding:0;min-width:180px;max-width:260px;vertical-align:top">
+      <td style="padding:0;min-width:240px;max-width:320px;vertical-align:top">
         <div class="note-cell" id="note-${r.id}">
           <textarea class="cl-input note-ta" style="resize:none;min-height:34px;height:34px;width:100%;font-size:12px;padding:6px 8px;line-height:1.4;border:none;background:transparent;color:var(--text);font-family:inherit;outline:none;overflow:hidden" placeholder="Ghi chú / dán link ảnh..." oninput="updateRow(${r.id},'note',this.value);autoResizeTA(this);renderNotePreview(${r.id})">${r.note||''}</textarea>
           ${renderNoteHTML(r.note||'')}
@@ -1107,6 +1123,8 @@ function renderAll() {
   // Auto-resize tất cả textarea ghi chú sau khi render
   setTimeout(() => {
     document.querySelectorAll('#cl-body textarea').forEach(ta => autoResizeTA(ta));
+    // Render preview cho cột dow
+    rows.forEach(r => { renderDowPreview(r.id); renderNotePreview(r.id); });
   }, 0);
   renderDashboard();
 }
@@ -1697,6 +1715,16 @@ function renderNoteHTML(text) {
   return imgUrls.length || nonImgUrls.length ? html : '';
 }
 
+function renderDowPreview(id) {
+  const cell = document.getElementById('dow-'+id);
+  if (!cell) return;
+  const r = rows.find(r => r.id === id);
+  let preview = cell.querySelector('.note-preview');
+  if (preview) preview.remove();
+  const newHTML = renderNoteHTML(r ? r.dow||'' : '');
+  if (newHTML) cell.insertAdjacentHTML('beforeend', newHTML);
+}
+
 function renderNotePreview(id) {
   const cell = document.getElementById('note-'+id);
   if (!cell) return;
@@ -1835,7 +1863,7 @@ function renderSMC() {
 <td class="smc-s2" style="padding:0">
   <div style="display:flex;flex-direction:column;gap:0">
     <input type="date" class="smc-ci" style="border-bottom:0.5px solid var(--smc-border)" value="${r.date}" onchange="smcUpd(${r.id},'date',this.value)">
-    <input class="smc-ci" style="font-weight:600;text-transform:uppercase" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="smcUpd(${r.id},'pair',this.value.toUpperCase())">
+    <input class="smc-ci" style="font-weight:600;text-transform:uppercase;font-size:11px" maxlength="10" placeholder="EURUSD" value="${r.pair}" oninput="smcUpd(${r.id},'pair',this.value.toUpperCase())">
   </div>
 </td>
 <td><select class="smc-cs" onchange="smcUpd(${r.id},'htfTrend',this.value)">${smcSopt(SMC_OPT.htfTrend,r.htfTrend)}</select></td>
