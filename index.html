@@ -657,32 +657,31 @@ async function apiGet(sheet) {
   return data.rows;
 }
 
+// Cache echo URL để không phải GET mỗi lần
+let _echoUrl = null;
+
+async function getEchoUrl() {
+  if (_echoUrl) return _echoUrl;
+  const url = getUrl();
+  // Dùng GET để lấy redirect URL (echo URL)
+  try {
+    const resp = await fetch(url + '?sheet=ping', { redirect: 'follow' });
+    _echoUrl = resp.url; // URL sau khi redirect
+    console.log('Echo URL cached:', _echoUrl);
+  } catch(e) {
+    _echoUrl = url; // fallback
+  }
+  return _echoUrl;
+}
+
 async function apiSave(sheet, data) {
   const url = getUrl();
   if (!url) return false;
 
-  // Bước 1: Gửi POST, không follow redirect để lấy URL redirect thực sự
-  let finalUrl = url;
-  try {
-    const probe = await fetch(url, {
-      method: 'POST',
-      redirect: 'manual',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'save', sheet, rows: data })
-    });
-    // Nếu bị redirect (302/301) → lấy URL đích rồi POST lại thẳng vào đó
-    if (probe.type === 'opaqueredirect' || probe.status === 302 || probe.status === 301) {
-      const loc = probe.headers.get('Location');
-      if (loc) finalUrl = loc;
-    } else {
-      // Không redirect → đọc kết quả luôn
-      const text = await probe.text();
-      if (text && (text.includes('"ok":true') || text.trim() === 'ok')) return true;
-    }
-  } catch(e) { /* bỏ qua lỗi probe */ }
+  // Lấy echo URL (POST thẳng vào đó, tránh redirect mất body)
+  const echoUrl = await getEchoUrl();
 
-  // Bước 2: POST thẳng vào URL cuối (không redirect nữa)
-  const resp = await fetch(finalUrl, {
+  const resp = await fetch(echoUrl, {
     method: 'POST',
     redirect: 'follow',
     headers: { 'Content-Type': 'text/plain' },
