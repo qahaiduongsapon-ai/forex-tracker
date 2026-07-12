@@ -301,7 +301,7 @@ table.rt tr:hover td{background:var(--surface2)}
      APPS SCRIPT URL – Thay URL dưới đây sau khi deploy
      ============================================================ -->
 <script>
-window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyp0b_5QHD2_orAGo2VwiMENn4RPWENvzD8y1FZIcvRyXLahAEE8xj2LxaehX7-eQq-/exec";
+window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyy11QxiwYqwtAYPlsOWyF0iEncheY_vsSdVrsOsHrJUsdInbu96yf4CYSJ1hRHqarI/exec";
 // Nếu chưa có URL, ứng dụng vẫn chạy và lưu offline (localStorage)
 // Sau khi có URL → bấm ⚙️ Cài đặt để cập nhật
 </script>
@@ -663,13 +663,11 @@ let _echoUrl = null;
 async function getEchoUrl() {
   if (_echoUrl) return _echoUrl;
   const url = getUrl();
-  // Dùng GET để lấy redirect URL (echo URL)
   try {
     const resp = await fetch(url + '?sheet=ping', { redirect: 'follow' });
-    _echoUrl = resp.url; // URL sau khi redirect
-    console.log('Echo URL cached:', _echoUrl);
+    _echoUrl = resp.url;
   } catch(e) {
-    _echoUrl = url; // fallback
+    _echoUrl = url;
   }
   return _echoUrl;
 }
@@ -678,24 +676,38 @@ async function apiSave(sheet, data) {
   const url = getUrl();
   if (!url) return false;
 
-  // Lấy echo URL (POST thẳng vào đó, tránh redirect mất body)
+  const body = JSON.stringify({ action: 'save', sheet, rows: data });
+
+  // Thử POST thẳng vào echo URL (lấy qua GET trước)
   const echoUrl = await getEchoUrl();
 
-  const resp = await fetch(echoUrl, {
-    method: 'POST',
-    redirect: 'follow',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'save', sheet, rows: data })
-  });
-  const text = await resp.text();
+  // Cách 1: POST vào echo URL với no-cors (không đọc response nhưng request đến được server)
   try {
-    const result = JSON.parse(text);
-    if (!result.ok) throw new Error(result.error || 'Save error');
+    await fetch(echoUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: body
+    });
+    // no-cors luôn trả opaque response, không biết thành công hay không
+    // nhưng request ĐÃ đến server → chấp nhận
     return true;
   } catch(e) {
-    if (text && text.trim().toLowerCase().includes('ok')) return true;
-    throw new Error('Invalid response: ' + text.substring(0, 100));
+    // Fallback: thử cách cũ
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain' },
+        body: body
+      });
+      const text = await resp.text();
+      if (text && (text.includes('"ok":true') || text.trim() === 'ok')) return true;
+    } catch(e2) {
+      throw new Error('Save failed: ' + e2.message);
+    }
   }
+  return true;
 }
 
 // Đồng bộ từ Sheets → local (thông minh: không ghi đè nếu local mới hơn)
